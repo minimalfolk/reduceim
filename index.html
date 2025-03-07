@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <style>
+        /* Basic styling for layout */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .image-preview2 {
+            margin: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .image-preview2 img {
+            width: 150px;
+            height: auto;
+        }
+
+        .file-info {
+            margin-top: 10px;
+        }
+
+        #progressContainer {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #progressBar {
+            width: 0;
+            height: 20px;
+            background-color: #4caf50;
+        }
+
+        #loading-spinner {
+            display: none;
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+
+        #downloadLinks {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #downloadAllLink {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #clearAllBtn {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="file"], input[type="number"], select {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Image Resizer</h1>
+
+    <!-- Image Upload Section -->
+    <label for="image-upload">Select Images:</label>
+    <input type="file" id="image-upload" multiple accept="image/*"><br>
+
+    <!-- Desired File Size Section -->
+    <label for="sizeInput">Desired Size (KB):</label>
+    <input type="number" id="sizeInput" placeholder="Enter size in KB" min="1"><br>
+
+    <!-- Image Format Section -->
+    <label for="format">Select Image Format:</label>
+    <select id="format">
+        <option value="jpeg">JPEG</option>
+        <option value="png">PNG</option>
+        <option value="webp">WebP</option>
+    </select><br>
+
+    <button id="increaseSizeBtn">Resize Images</button>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner">Processing...</div>
+
+    <!-- Progress Bar Section -->
+    <div id="progressContainer">
+        <div id="progressBar"></div>
+    </div>
+
+    <!-- Download Links Section -->
+    <div id="downloadLinks"></div>
+
+    <!-- Download All Section -->
+    <div id="downloadAllLink">
+        <a href="#">Download All as ZIP</a>
+    </div>
+
+    <!-- Clear All Section -->
+    <div id="clearAllBtn">
+        <button>Clear All</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script>
+        // Your JavaScript code goes here (provided earlier)
+    </script>
+
+</body>
+</html>
