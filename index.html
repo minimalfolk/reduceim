@@ -2,123 +2,228 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Resizer</title>
-    <style>
-        /* Basic styling for layout */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
+    <link rel="stylesheet" href="drop-zone-styles.css">
+    <link rel="stylesheet" href="spin-styles.css">
+	 <link rel="stylesheet" href="output-styles.css">
+	 <link rel="stylesheet" href="styles.css">
+	 <link rel="apple-touch-icon" sizes="180x180" href="site-images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="site-images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="site-images/favicon-16x16.png">
+	 
+	 <title>Reduce Pic Size in KB - No Quality Loss!</title>
+ <link rel="canonical" href="https://reducepic.com"/>
+ <meta name="description" content="Reduce pic size in KB without losing quality. just upload pic, enter the kb size, choose desired format & download reduced size image">  
+<meta name="keywords" content="reduce pic size in KB, compress image KB size, reduce pic file size in KB, online image size reducer, compress JPEG image kb without quality loss, compress PNG to specific size, image kb size compression tool, reduce images for websites, batch image compression, free online pic compressor">  
 
-        h1 {
-            text-align: center;
-        }
-
-        .image-preview2 {
-            margin: 10px;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .image-preview2 img {
-            width: 150px;
-            height: auto;
-        }
-
-        .file-info {
-            margin-top: 10px;
-        }
-
-        #progressContainer {
-            display: none;
-            margin-top: 20px;
-        }
-
-        #progressBar {
-            width: 0;
-            height: 20px;
-            background-color: #4caf50;
-        }
-
-        #loading-spinner {
-            display: none;
-            text-align: center;
-            font-size: 18px;
-            color: #555;
-        }
-
-        #downloadLinks {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        #downloadAllLink {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        #clearAllBtn {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        input[type="file"], input[type="number"], select {
-            margin: 10px 0;
-        }
-    </style>
+	  
 </head>
+
+
 <body>
 
-    <h1>Image Resizer</h1>
+<nav>
+        <a href="/"><img src="site-images/favicon-32x32.png" height="50px" width="50px" alt="ReducePic Logo" >      <b>ReducePic.com </b></a>
+        <div class="mencontainer" onclick="tooglemenu(this)">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+          </div>
+        <ul>
+            
+        <li>
+                <a href="/">Reduce KB Size</a>
+            </li>
+            <li>
+                <a href="/reduce-image-size-in-pixels">Reduce Pixel Size</a>
+            </li>
+            <li>
+                <a href="/increase-image-size-50kb-100kb">Increase Image Size</a>
+            </li>
+            <li>
+                <a href="/check-image-dpi">Check Image DPI</a>
+            </li>
+            <li>
+                <a href="/change-image-dpi">Change Image DPI</a>
+            </li>
+            <li>
+                <a href="#">Change Image Format</a>
+            </li>
+            
+        </ul>
+    </nav>
 
-    <!-- Image Upload Section -->
-    <label for="image-upload">Select Images:</label>
-    <input type="file" id="image-upload" multiple accept="image/*"><br>
 
-    <!-- Desired File Size Section -->
-    <label for="sizeInput">Desired Size (KB):</label>
-    <input type="number" id="sizeInput" placeholder="Enter size in KB" min="1"><br>
 
-    <!-- Image Format Section -->
-    <label for="format">Select Image Format:</label>
-    <select id="format">
-        <option value="jpeg">JPEG</option>
-        <option value="png">PNG</option>
-        <option value="webp">WebP</option>
-    </select><br>
 
-    <button id="increaseSizeBtn">Resize Images</button>
 
-    <!-- Loading Spinner -->
-    <div id="loading-spinner">Processing...</div>
-
-    <!-- Progress Bar Section -->
-    <div id="progressContainer">
-        <div id="progressBar"></div>
+    <center>
+	<div class="contentsec">
+    <h1>Reduce Pic Size in KB without Losing Quality!</h1> 
+	<br>
+	
+	Effortlessly Change Pic Size to 20KB, 50KB, 100KB or Specific Size!
+	
+        <div class="container">
+         <form id="compressionForm">
+    <div id="drop-zone" ondragover="event.preventDefault()" ondrop="dropHandler(event)" onclick="document.getElementById('image-upload').click();">
+        <p id="choose-text">Click here or drag and drop an image file (or multiple files)<br><br></p>
+        <input id="image-upload" type="file" name="image" accept="image/*" multiple onchange="previewImages(event)">
+        <div id="image-preview-container"></div>
+        <button type="button" id="choose-btn" class="btn">Choose Images</button>
     </div>
+    
+</form>
 
-    <!-- Download Links Section -->
-    <div id="downloadLinks"></div>
+        </div>
 
-    <!-- Download All Section -->
-    <div id="downloadAllLink">
-        <a href="#">Download All as ZIP</a>
-    </div>
+        <div class="progress-container" id="progressContainer">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
 
-    <!-- Clear All Section -->
-    <div id="clearAllBtn">
-        <button>Clear All</button>
-    </div>
+        <div class="form-group"> 
+            <label id="sizeLabel" for="sizeInput">Enter Size in KB:</label>  <br>
+            <input type="number" id="sizeInput" min="1" value="20" required> <br>
+			
+			
+		
+            <label for="format">Format:</label><br>
+            <select name="format" id="format">
+                <option value="jpeg">JPEG</option>
+				<option value="jpg">JPG</option>
+                <option value="png">PNG</option>
+                <option value="gif">GIF</option>
+				<option value="tiff">TIFF</option>
+				<option value="bmp">BMP</option>
+				<option value="webp">WEBP</option>
+                
+            </select> <br><br>
+			
+			
+            <button type="button" class="btn" id="increaseSizeBtn">Reduce Pic Size</button>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
-    <script>
-        // Your JavaScript code goes here (provided earlier)
-    </script>
+        <div id="buttonContainer" class="form-group">
+            <button type="button" class="clear-btn" id="clearAllBtn">Clear All</button>
+            <button id="downloadAllLink" style="display: none;" class="btn">Download All</button>
+        </div>
 
+        <div id="downloadLinks"></div>
+		
+		
+		 <br><br><br>
+<div style="background-color: #f8fcfc; padding: 40px;">
+    <div style="text-align: justify;line-height: 2;">
+        
+       <p>Welcome to <strong>ReducePic,</strong> the ultimate online solution for reducing pic sizes to precise targets like 20KB, 50KB, 100KB, or any custom size you desire—all without compromising image quality! Whether you're a student uploading assignments, a professional optimizing images for a website, or someone trying to meet file size requirements for email or online forms, our tool makes the process effortless and fast. With just a few clicks, you can compress your images to specific file sizes while preserving their clarity, sharpness, and vibrant colors. Unlike traditional image compression tools that sacrifice quality for size, ReducePic uses advanced algorithms to ensure your images remain visually stunning, even at smaller file sizes. Plus, our intuitive interface makes it easy for users of all skill levels to resize images, whether you're working with PNGs, JPEGs, or other popular formats. 
+	   </p>
+	</section>
+	<div style="text-align: center; margin: 20px auto; max-width: 800px; font-family: Arial, sans-serif;">
+  <h3 style="font-size: 24px; color: #333;">Sample Image - Reduced Pic KB Size</h3>
+  <img src="site-images/kb-reduced.jpg" alt="reduce kb size of image " style="width: 100%; max-width: 600px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin: 20px 0;">
+  <p style="font-size: 16px; color: #555;">You can see how our tool reduce pic size in 20kb without losing quality!</p>
+</div>
+    
+        <h2> How to Reduce Pic Size to Specific KB (20KB, 50KB, 100KB) </h2>
+		
+
+ReducePic is the perfect choice for anyone looking to change kb size of pics for web use, social media, or any platform with strict file size requirements. Reducing a pic's size to an exact KB value, such as 20KB, 50KB, or 100KB, is simple and hassle-free with <b>ReducePic</b>. Follow these steps:
+
+<br> <h4>1. Upload your Single or Multiple Pics:</h4> Select single or multiple picss or simply drag and drop them into the tool. A preview of the images will appear, displaying key information such as dimensions, pixel size, and current file size in KB.  
+
+<br><h4>2. Select your Desired File Size:</h4> Enter your desired pic size in KB, such as 20KB, 50KB, or 100KB. By default, the target size is set to 20KB, but you can customize it based on your requirements.  
+
+<br><h4>3. Choose the Output Format:</h4>  if you wish to change the original format of the image (e.g., JPG, PNG, GIF, TIFF, BMP, WEBP). The default format is set to JPEG for convenience.  
+
+<br><h4>4. Click "Reduce Pic Size":</h4> Click the "Reduce Pic Size" button. The images kb size will be changed to the specified size, and a preview of the optimized images along with their updated size will be shown. Each image will have a <b> "download button" </b>for individual downloads.  
+
+<br>If you’re working with multiple images, you can download all of them in one go by clicking the <b>"Download All"</b> button, which will save them as a ZIP file. Want to process even more images? Simply upload additional files and repeat the steps effortlessly. With <b>ReducePic</b>, reducing pic sizes is quicker, easier, and more efficient than ever!  
+
+
+    </section>
+
+    <section>
+         
+		
+		<h2>Key Features of Pic KB Size Reducer </h2>
+
+<strong>ReducePic</strong> is a very fast processing tool, and since it is browser-based, your images are not saved on any server, ensuring complete privacy.  
+
+<br><strong>1. Precise Size Reduction</strong>
+   Easily reduce pics to specific KB sizes like 20KB, 50KB, or 100KB, with accuracy.  
+
+<br><strong>2. Batch Processing:</strong>
+   Compress multiple pictures at once, saving time for bulk tasks.  
+
+<br><strong>3. Quality Preservation:</strong>
+   Advanced algorithms ensure the pic quality remains intact, even after compression.  
+
+<br><strong>4. Multiple Output Formats:</strong>  
+   Convert images into popular formats like JPG, PNG, GIF, BMP, WEBP, or TIFF.  
+
+<br><strong>5. Drag and Drop Functionality:</strong>
+   Simply drag and drop your images to begin, with instant previews and size details.  
+
+<br><strong>6. Secure and Private:</strong>  
+   Since no pictures are saved on the server, your files remain secure and private.  
+
+		
+		
+		
+        
+    </section>
+
+    <section>
+        <h2>Why Reduce Pic Size?</h2>
+        <p>Reducing pic file sizes in kb helps improve website performance, saves storage space, and makes it easier to share or upload images. Whether you're working on a website, social media posts, or simply sending images via email, reducing your pictures can make your life much easier by reducing file sizes while maintaining high picture quality.</p>
+    </section>
+
+    <section>
+        <h3>Conclusion</h3>
+          
+
+<strong>ReducePic</strong> is the perfect tool for anyone looking to reduce pic sizes in kb quickly, accurately, and securely. Its fast processing, browser-based functionality, and ability to preserve image quality make it an ideal choice for professionals, students, and everyday users alike. Whether you need to meet specific file kb size requirements or change kbs of images for web use, <strong>ReducePic</strong> offers an effortless and privacy-focused solution. 
+<br>Try it today and experience the convenience of high-quality pic kb size reducing at your fingertips!
+	</section>
+		</div> </div></div>
+		 <footer>
+        <div>
+            <img src="/site-images/logo.png" alt="ReducePic Logo" width="153px" height="40px">
+			
+            <h4>Our Aim</h4>
+            <p>At ReducePic, our target is to satisfy visitors with a simple, efficient, and secure tool to reduce pic size in KB. </p>
+            
+            <span>&copy; ReducePic</span>
+            <br/><br/>
+            
+        </div>
+        <div>
+            <h4>Website Links</h4>
+            <ul>
+                
+                <li><a href="/about-us">About Us</a></li>
+                <li><a href="/contact-us">Contact Us</a></li>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                
+            </ul>
+        </div>
+        <div>
+            <h4>Other Tools</h4>
+            <ul>
+                <li><a href="https://resizepng.com" target="_blank">PNG Image Resizer</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+		
+		
+    </center>
+	
+	<script src="spin-script.js"></script>
+	<script src="image-info-script.js"></script>
+	<script src="kb-resizer-script.js"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 </body>
 </html>
+
