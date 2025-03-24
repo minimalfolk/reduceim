@@ -1,165 +1,270 @@
+// DOM Elements
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const qualityRange = document.getElementById('qualityRange');
+const qualityValue = document.getElementById('qualityValue');
+const outputFormat = document.getElementById('outputFormat');
+const compressBtn = document.getElementById('compressBtn');
+const originalPreview = document.getElementById('originalPreview');
+const originalStats = document.getElementById('originalStats');
+const compressedPreview = document.getElementById('compressedPreview');
+const compressedStats = document.getElementById('compressedStats');
+const savingsPercent = document.getElementById('savingsPercent');
+const downloadBtn = document.getElementById('downloadBtn');
+const fileError = document.getElementById('fileError');
+const controls = document.getElementById('controls');
+const results = document.getElementById('results');
 
-document.getElementById('increaseSizeBtn').addEventListener('click', async () => {
-    const files = document.getElementById('image-upload').files;
-    const desiredSizeKB = parseInt(document.getElementById('sizeInput').value);
-    const selectedFormat = document.getElementById('format').value;  // Get the selected format
-    const downloadLinksContainer = document.getElementById('downloadLinks');
-    const downloadAllLink = document.getElementById('downloadAllLink');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressBar = document.getElementById('progressBar');
-    const clearAllBtn = document.getElementById('clearAllBtn');
+// State
+let originalFile = null;
+let compressedBlob = null;
+let originalImageData = null;
 
-    const processedBlobs = []; // Store processed images for ZIP
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if browser supports required APIs
+  if (!window.FileReader || !window.Worker) {
+    showError('Your browser does not support all required features. Please use a modern browser like Chrome, Firefox, or Edge.');
+    return;
+  }
 
-    downloadLinksContainer.innerHTML = '';  // Clear previous results
-
-    if (files.length === 0 || isNaN(desiredSizeKB) || desiredSizeKB < 1) {
-        alert('Please upload images and specify a valid size (minimum 1KB).');
-        return;
-    }
-
-    let processedCount = 0;
-    progressContainer.style.display = 'block'; // Show the progress container
-
-    // Loop through each file and process it
-    const promises = Array.from(files).map(async (file) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-
-            img.onload = async () => {
-                let canvas = document.createElement('canvas');
-                let ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-
-                let outputBlob;
-                let currentSizeBytes;
-                let quality = 1.0;
-                let scaleFactor = 0.9;  // Start scaling by 10%
-
-                // Iteratively adjust quality and scale down the image until size is reached
-                while (true) {
-                    // Compress the image and check the size
-                    outputBlob = await new Promise((resolve) => {
-                        canvas.toBlob(blob => resolve(blob), `image/${selectedFormat}`, quality);
-                    });
-
-                    currentSizeBytes = outputBlob.size;
-
-                    // If the size is below the target, stop the loop
-                    if (currentSizeBytes <= desiredSizeKB * 1024) {
-                        break;
-                    }
-
-                    // Reduce the pixel dimensions to bring the size down
-                    canvas.width = canvas.width * scaleFactor;
-                    canvas.height = canvas.height * scaleFactor;
-                    ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    // Adjust the quality slightly, if necessary
-                    if (quality > 0.5) {
-                        quality -= 0.05;
-                    } else {
-                        quality -= 0.02;  // Slower adjustment for low quality
-                    }
-
-                    // If size isn't dropping fast enough, reduce pixels more aggressively
-                    if (canvas.width < 100 || canvas.height < 100) {
-                        scaleFactor = 0.8;  // Further shrink the image if needed
-                    }
-
-                    // Edge case: Stop if the image is too small to shrink further
-                    if (canvas.width < 50 || canvas.height < 50) {
-                        break;
-                    }
-                }
-
-                let finalBlob = outputBlob;
-                const desiredSizeBytes = desiredSizeKB * 1024;
-
-                // If still smaller than desired size, add dummy data
-                if (finalBlob.size < desiredSizeBytes) {
-                    const extraBytesNeeded = desiredSizeBytes - finalBlob.size;
-                    const extraData = new Uint8Array(extraBytesNeeded).fill(0);
-                    finalBlob = new Blob([finalBlob, extraData], { type: `image/${selectedFormat}` });
-                }
-
-                const downloadURL = URL.createObjectURL(finalBlob);
-
-                // Create a preview section with download button and size in KB
-                const imageSizeKB = (finalBlob.size / 1024).toFixed(0); // Convert size to KB
-                const imagePreview = document.createElement('div');
-                imagePreview.classList.add('image-preview2');
-                imagePreview.innerHTML = `
-                    <img src="${downloadURL}" alt="Preview Image">
-                    <div class="file-info">
-                        <div><strong>Size: ${imageSizeKB}KB</strong></div> 
-                        <a href="${downloadURL}" download="converted-image-${file.name.split('.').slice(0, -1).join('.')}.${selectedFormat}"><strong>Download</strong></a>
-</a>
-
-                    </div>
-                `;
-                downloadLinksContainer.appendChild(imagePreview);
-
-                // Store processed blobs for zipping later
-                processedBlobs.push({ fileName: `converted-image-${file.name.split('.').slice(0, -1).join('.')}.${selectedFormat}`, blob: finalBlob });
-
-                processedCount++;
-                progressBar.style.width = `${(processedCount / files.length) * 100}%`;
-
-                if (processedCount === files.length) {
-                    progressContainer.style.display = 'none';
-                    clearAllBtn.style.display = 'block';  // Show Clear All button after processing
-
-                    // Hide the "Download All" button if only one image is processed
-                    if (files.length > 1) {
-                        downloadAllLink.style.display = 'block';  // Show Download All button if multiple images processed
-                    }
-
-                    document.getElementById('downloadLinks').scrollIntoView({ behavior: 'smooth' });
-                }
-                resolve();
-            };
-
-            img.onerror = () => {
-                alert(`Error loading image: ${file.name}. Please try a different file.`);
-                reject();
-            };
-        });
-    });
-
-    await Promise.all(promises);
-
-    downloadLinksContainer.style.display = 'flex';  // Display the container for previews
-
-    // ZIP and download processed images
-    document.getElementById('downloadAllLink').addEventListener('click', async () => {
-        const zip = new JSZip();
-        if (processedBlobs.length > 1) {
-            processedBlobs.forEach(({ fileName, blob }) => {
-                zip.file(fileName, blob);
-            });
-
-            zip.generateAsync({ type: 'blob' }).then((content) => {
-                const zipURL = URL.createObjectURL(content);
-                const a = document.createElement('a');
-                a.href = zipURL;
-                a.download = 'converted-images.zip';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);  // Clean up
-            });
-        }
-    });
+  setupEventListeners();
 });
 
-// Clear all images and reset the page by refreshing
-document.getElementById('clearAllBtn').addEventListener('click', () => {
-    location.reload();  // Refresh the whole page to clear everything
-});
+// Event Listeners
+function setupEventListeners() {
+  // Upload zone interactions
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', handleDragOver);
+  uploadZone.addEventListener('drop', handleDrop);
+  uploadZone.addEventListener('dragleave', handleDragLeave);
 
+  // File input
+  fileInput.addEventListener('change', handleFileSelect);
 
+  // Quality slider
+  qualityRange.addEventListener('input', updateQualityValue);
 
+  // Compress button
+  compressBtn.addEventListener('click', compressImage);
+
+  // Download button
+  downloadBtn.addEventListener('click', downloadCompressedImage);
+}
+
+// Drag and Drop Handlers
+function handleDragOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  uploadZone.style.borderColor = 'var(--primary)';
+  uploadZone.style.backgroundColor = 'rgba(67, 97, 238, 0.05)';
+}
+
+function handleDragLeave(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  resetUploadZoneStyle();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  resetUploadZoneStyle();
+
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    handleFile(files[0]);
+  }
+}
+
+function resetUploadZoneStyle() {
+  uploadZone.style.borderColor = 'var(--border)';
+  uploadZone.style.backgroundColor = '';
+}
+
+// File Handling
+function handleFileSelect(e) {
+  if (e.target.files.length > 0) {
+    handleFile(e.target.files[0]);
+  }
+}
+
+function handleFile(file) {
+  // Validate file
+  if (!file.type.match('image.*')) {
+    showError('Please select an image file (JPG, PNG, GIF, BMP)');
+    return;
+  }
+
+  if (file.size > 25 * 1024 * 1024) { // 25MB limit
+    showError('File size exceeds 25MB limit. Please choose a smaller image.');
+    return;
+  }
+
+  // Reset previous state
+  resetState();
+  originalFile = file;
+
+  // Read and display original image
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    originalPreview.src = e.target.result;
+    originalPreview.hidden = false;
+    
+    // Calculate and display original stats
+    calculateImageStats(file, e.target.result).then(stats => {
+      originalStats.textContent = `${stats.dimensions} • ${stats.formattedSize}`;
+      originalImageData = stats;
+    });
+
+    // Show controls
+    controls.hidden = false;
+    compressBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Image Compression
+async function compressImage() {
+  if (!originalFile) return;
+
+  // Show loading state
+  compressBtn.disabled = true;
+  compressBtn.setAttribute('aria-busy', 'true');
+  compressBtn.querySelector('.btn-text').textContent = 'Compressing...';
+
+  try {
+    // Use Compressor.js library (loaded from CDN)
+    const quality = parseInt(qualityRange.value) / 100;
+    const format = outputFormat.value;
+    
+    compressedBlob = await new Promise((resolve, reject) => {
+      new Compressor(originalFile, {
+        quality,
+        mimeType: `image/${format}`,
+        success(result) {
+          resolve(result);
+        },
+        error(err) {
+          reject(err);
+        },
+        convertSize: format === 'webp' ? Infinity : 0 // Convert all to WebP if selected
+      });
+    });
+
+    // Display compressed image
+    const compressedUrl = URL.createObjectURL(compressedBlob);
+    compressedPreview.src = compressedUrl;
+    compressedPreview.hidden = false;
+
+    // Calculate and display compressed stats
+    const stats = await calculateImageStats(compressedBlob, compressedUrl);
+    compressedStats.textContent = `${stats.dimensions} • ${stats.formattedSize}`;
+
+    // Calculate savings
+    const savings = ((originalFile.size - compressedBlob.size) / originalFile.size * 100).toFixed(0);
+    savingsPercent.textContent = `${savings}%`;
+
+    // Show results
+    results.hidden = false;
+    downloadBtn.disabled = false;
+
+    // Scroll to results
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  } catch (error) {
+    showError('Failed to compress image. Please try again.');
+    console.error('Compression error:', error);
+  } finally {
+    // Reset button state
+    compressBtn.disabled = false;
+    compressBtn.removeAttribute('aria-busy');
+    compressBtn.querySelector('.btn-text').textContent = 'Compress Now';
+  }
+}
+
+// Helper Functions
+function updateQualityValue() {
+  qualityValue.textContent = qualityRange.value;
+}
+
+async function calculateImageStats(file, dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const dimensions = `${img.width} × ${img.height}px`;
+      const formattedSize = formatFileSize(file.size);
+      resolve({ dimensions, formattedSize, width: img.width, height: img.height });
+    };
+    img.src = dataUrl;
+  });
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} bytes`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function resetState() {
+  originalPreview.hidden = true;
+  compressedPreview.hidden = true;
+  controls.hidden = true;
+  results.hidden = true;
+  fileError.hidden = true;
+  compressBtn.disabled = true;
+  downloadBtn.disabled = true;
+  originalFile = null;
+  compressedBlob = null;
+}
+
+function showError(message) {
+  fileError.textContent = message;
+  fileError.hidden = false;
+  setTimeout(() => {
+    fileError.hidden = true;
+  }, 5000);
+}
+
+// Download
+function downloadCompressedImage() {
+  if (!compressedBlob) return;
+
+  const a = document.createElement('a');
+  const extension = outputFormat.value === 'jpeg' ? 'jpg' : outputFormat.value;
+  const filename = `compressed-${Date.now()}.${extension}`;
+  
+  a.href = URL.createObjectURL(compressedBlob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  
+  // Clean up
+  setTimeout(() => {
+    URL.revokeObjectURL(a.href);
+  }, 100);
+}
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }).catch(err => {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+// Mobile Navigation Toggle
+const navToggle = document.getElementById('navToggle');
+const mainNav = document.getElementById('mainNav');
+
+if (navToggle && mainNav) {
+  navToggle.addEventListener('click', () => {
+    const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+    navToggle.setAttribute('aria-expanded', !isExpanded);
+    mainNav.classList.toggle('active');
+  });
+}
