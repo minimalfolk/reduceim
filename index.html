@@ -1,49 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ReducePic India - Free Online Image Compressor</title>
-  <meta name="description" content="ReducePic India - Instantly compress your images online without losing quality. Fast, secure, and easy to use." />
-  <link rel="stylesheet" href="css/main.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReducePic PRO | AI Image Compressor for Professionals</title>
+  <meta name="description" content="The fastest AI-powered image compressor. Reduce file sizes by 90% with pixel-perfect precision. Batch process 1000+ images in one click.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6c5ce7;
+      --dark: #2d3436;
+      --light: #f5f6fa;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--light);
+      color: var(--dark);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    /* Add your premium CSS here */
+  </style>
 </head>
 <body>
-
-  <!-- Navbar with Hamburger Menu -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="logo">ReducePic India</a>
-      <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="blog.html">Blog</a></li>
-      </ul>
+  <!-- Dominant Header -->
+  <header class="pro-header">
+    <div class="container">
+      <div class="header-flex">
+        <div class="logo">REDUCE<span>PIC</span> PRO</div>
+        <nav>
+          <a href="#features">Why PRO?</a>
+          <a href="#tools">Tools</a>
+          <a href="#enterprise">Enterprise</a>
+          <a href="#" class="cta-pro">TRY PRO FREE</a>
+        </nav>
+      </div>
     </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <header class="hero">
-    <h1>ReducePic India</h1>
-    <p>The fastest and cleanest image compressor online</p>
-    <a href="#upload" class="cta-btn">Compress Your Image</a>
   </header>
 
-  <!-- Upload Section -->
-  <main id="upload">
-    <section class="upload-box">
-      <h2>Upload Your Image</h2>
-      <input type="file" id="imageInput" accept="image/*" />
-      <button onclick="compressImage()">Compress Now</button>
-      <div id="result"></div>
-    </section>
-  </main>
+  <!-- Hero with Immediate Conversion -->
+  <section class="hero-pro">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <h1>AI-Powered Image Compression <span>for Professionals</span></h1>
+          <p class="hero-sub">Process 1000+ images in seconds with military-grade optimization</p>
+          
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-value">10X</div>
+              <div class="stat-label">Faster than competitors</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">90%</div>
+              <div class="stat-label">Size reduction</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dominant Upload Area -->
+        <div class="upload-pro">
+          <div class="upload-header">
+            <div class="tab active">COMPRESS</div>
+            <div class="tab">RESIZE</div>
+            <div class="tab">CONVERT</div>
+          </div>
+          
+          <div class="upload-body">
+            <div class="drop-zone">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Drag & drop images or <span>browse files</span></p>
+              <input type="file" id="proUpload" multiple accept="image/*">
+            </div>
+            
+            <!-- PRO Settings Panel -->
+            <div class="pro-settings">
+              <div class="setting">
+                <label>Target Size:</label>
+                <div class="size-controls">
+                  <input type="number" placeholder="Width" class="dimension-input">
+                  <span>×</span>
+                  <input type="number" placeholder="Height" class="dimension-input">
+                  <select>
+                    <option>px</option>
+                    <option>%</option>
+                    <option>cm</option>
+                    <option>in</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="setting">
+                <label>Quality:</label>
+                <input type="range" min="1" max="100" value="90" class="quality-slider">
+                <span class="quality-value">90%</span>
+              </div>
+              
+              <div class="setting">
+                <label>Format:</label>
+                <select class="format-select">
+                  <option value="auto">Auto (Smart Detect)</option>
+                  <option value="webp">WEBP (Recommended)</option>
+                  <option value="avif">AVIF (Next-Gen)</option>
+                  <option value="jpg">JPG</option>
+                  <option value="png">PNG</option>
+                </select>
+              </div>
+            </div>
+            
+            <button class="pro-process-btn">
+              <i class="fas fa-bolt"></i> PROCESS NOW (FREE TRIAL)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 ReducePic India. All rights reserved.</p>
-    <a href="blog.html">Read Blog</a>
+  <!-- Killer Features - Minimal but Powerful -->
+  <section id="features" class="killer-features">
+    <div class="container">
+      <h2>What Makes Us <span>Unbeatable</span></h2>
+      
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h3>AI-Powered Compression</h3>
+          <p>Our neural networks analyze each image to apply perfect compression without quality loss.</p>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </div>
+          <h3>Smart Resizing</h3>
+          <p>Batch resize with pixel-perfect precision or target specific file sizes.</p>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">
+            <i class="fas fa-server"></i>
+          </div>
+          <h3>100% Cloud-Based</h3>
+          <p>Process GBs of images without slowing down your machine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitive Comparison -->
+  <section class="competitor-crush">
+    <div class="container">
+      <h2>We <span>Dominate</span> the Competition</h2>
+      <div class="comparison">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>ReducePic PRO</th>
+              <th>Others</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Max Batch Size</td>
+              <td><strong>1000+ images</strong></td>
+              <td>20-50 images</td>
+            </tr>
+            <tr>
+              <td>Target Size Control</td>
+              <td><strong>Precision editing</strong></td>
+              <td>Basic sliders</td>
+            </tr>
+            <tr>
+              <td>AVIF Support</td>
+              <td><strong>Yes</strong></td>
+              <td>Rarely</td>
+            </tr>
+            <tr>
+              <td>API Access</td>
+              <td><strong>Free Tier</strong></td>
+              <td>Paid only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <h2>Ready to <span>Dominate</span> Your Image Workflow?</h2>
+      <p>Join 50,000+ professionals who switched to ReducePic PRO</p>
+      <button class="cta-pro-main">
+        <i class="fas fa-rocket"></i> START FREE PRO TRIAL
+      </button>
+    </div>
+  </section>
+
+  <!-- Premium Footer -->
+  <footer class="pro-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">REDUCE<span>PIC</span> PRO</div>
+        <div class="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">API</a>
+          <a href="#">Support</a>
+        </div>
+        <div class="footer-copyright">
+          © 2025 ReducePic Technologies. All rights reserved.
+        </div>
+      </div>
+    </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script>
+    // PRO JavaScript will go here
+    document.querySelector('.quality-slider').addEventListener('input', function() {
+      document.querySelector('.quality-value').textContent = this.value + '%';
+    });
+  </script>
 </body>
 </html>
