@@ -1,379 +1,49 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en">
 <head>
-    <!-- Primary Meta Tags -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Reduce image size online for FREE with ReducePic – AI-powered image compressor. Shrink JPG, PNG, GIF, BMP files instantly without quality loss. Optimized for WhatsApp, Instagram & websites.">
-    <meta name="keywords" content="compress image, reduce photo size, free image optimizer, shrink JPEG, PNG compressor, GIF reducer, BMP optimizer, WhatsApp image compressor, Instagram photo resizer">
-
-    <!-- SEO Title (60 chars max) -->
-    <title>Reduce Image Size Online – Free AI-Powered Compressor | ReducePic</title>
-
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="styles/main.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="styles/main.min.css"></noscript>
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/compressorjs@1.1.1/dist/compressor.min.js" as="script" crossorigin>
-
-    <!-- Open Graph / Social Meta -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://reducepic.in/">
-    <meta property="og:title" content="Reduce Image Size Online – Free AI-Powered Compressor">
-    <meta property="og:description" content="Shrink JPG, PNG, GIF, BMP files instantly without quality loss. Perfect for WhatsApp, Instagram & websites.">
-    <meta property="og:image" content="https://reducepic.in/assets/social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:creator" content="@reducepic">
-
-    <!-- Favicon & App Icons -->
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.webmanifest">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://reducepic.in/">
-
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "ReducePic Image Compressor",
-      "url": "https://reducepic.in",
-      "description": "Free online tool to reduce image file size without quality loss",
-      "applicationCategory": "ImageEditor",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "1250",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
-    }
-    </script>
-
-    <!-- Critical CSS (Inlined) -->
-    <style>
-        /* Minimal above-the-fold styles */
-        .no-js .js-required { display: none; }
-        [hidden] { display: none !important; }
-        .sr-only { position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReducePic India - Free Online Image Compressor</title>
+  <meta name="description" content="ReducePic India - Instantly compress your images online without losing quality. Fast, secure, and easy to use." />
+  <link rel="stylesheet" href="css/main.css" />
 </head>
-
 <body>
-    <!-- Skip Navigation -->
-    <a href="#main-content" class="skip-link">Skip to compressor tool</a>
 
-    <!-- Progressive App Shell -->
-    <header class="app-header" role="banner">
-        <div class="container">
-            <a href="/" class="logo" aria-label="ReducePic Home">
-                <svg width="40" height="40" aria-hidden="true">
-                    <use href="/assets/sprite.svg#logo"></use>
-                </svg>
-                <span>ReducePic</span>
-            </a>
-            
-            <button id="nav-toggle" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="main-nav">
-                <span class="hamburger"></span>
-            </button>
-            
-            <nav id="main-nav" class="main-nav" role="navigation" aria-label="Primary">
-                <ul>
-                    <li><a href="/about" class="nav-link">About</a></li>
-                    <li><a href="/blog/image-compression-guide" class="nav-link">Guide</a></li>
-                    <li><a href="/contact" class="nav-link">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <!-- Navbar with Hamburger Menu -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">ReducePic India</a>
+      <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <main id="main-content" role="main">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container">
-                <h1>Reduce Image Size in Seconds</h1>
-                <p class="subtitle">Free online tool to compress JPG, PNG, GIF, BMP without quality loss</p>
-                
-                <!-- Conversion Widget -->
-                <div class="converter-widget" role="region" aria-labelledby="widget-heading">
-                    <h2 id="widget-heading" class="sr-only">Image Compression Tool</h2>
-                    
-                    <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="Upload image">
-                        <svg class="upload-icon" width="48" height="48" aria-hidden="true">
-                            <use href="/assets/sprite.svg#upload"></use>
-                        </svg>
-                        <p>Drag & drop images or <span class="highlight">click to browse</span></p>
-                        <p class="small">Supports JPG, PNG, GIF, BMP (Max 25MB)</p>
-                        <input type="file" id="fileInput" accept="image/*" hidden>
-                    </div>
-                    
-                    <div id="fileError" class="error-message" role="alert" hidden></div>
-                    
-                    <div class="controls" id="controls" hidden>
-                        <div class="control-group">
-                            <label for="qualityRange">Quality: <output id="qualityValue">80</output>%</label>
-                            <input type="range" id="qualityRange" min="10" max="100" value="80" step="1">
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="outputFormat">Format:</label>
-                            <select id="outputFormat">
-                                <option value="jpeg">JPG (Recommended)</option>
-                                <option value="png">PNG (Lossless)</option>
-                                <option value="webp">WebP (Modern)</option>
-                                <option value="gif">GIF</option>
-                                <option value="bmp">BMP</option>
-                            </select>
-                        </div>
-                        
-                        <button id="compressBtn" class="primary-btn" disabled>
-                            <span class="btn-text">Compress Now</span>
-                            <span class="loader" hidden></span>
-                        </button>
-                    </div>
-                    
-                    <div id="results" hidden>
-                        <div class="comparison">
-                            <div class="image-box">
-                                <h3>Original</h3>
-                                <img id="originalPreview" alt="" loading="lazy">
-                                <div id="originalStats" class="stats"></div>
-                            </div>
-                            <div class="image-box">
-                                <h3>Compressed</h3>
-                                <img id="compressedPreview" alt="" loading="lazy">
-                                <div id="compressedStats" class="stats"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="savings">
-                            <div class="savings-badge">
-                                <span id="savingsPercent">0%</span> smaller
-                            </div>
-                            <button id="downloadBtn" class="primary-btn">
-                                Download Compressed Image
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>ReducePic India</h1>
+    <p>The fastest and cleanest image compressor online</p>
+    <a href="#upload" class="cta-btn">Compress Your Image</a>
+  </header>
 
-        <!-- Features Grid -->
-        <section class="features">
-            <div class="container">
-                <h2>Why ReducePic Stands Out</h2>
-                
-                <div class="feature-grid">
-                    <article class="feature-card">
-                        <svg class="feature-icon" width="48" height="48" aria-hidden="true">
-                            <use href="/assets/sprite.svg#speed"></use>
-                        </svg>
-                        <h3>Lightning Fast</h3>
-                        <p>Compress images in milliseconds using browser-powered processing</p>
-                    </article>
-                    
-                    <article class="feature-card">
-                        <svg class="feature-icon" width="48" height="48" aria-hidden="true">
-                            <use href="/assets/sprite.svg#privacy"></use>
-                        </svg>
-                        <h3>100% Private</h3>
-                        <p>Your images never leave your device - no server uploads</p>
-                    </article>
-                    
-                    <article class="feature-card">
-                        <svg class="feature-icon" width="48" height="48" aria-hidden="true">
-                            <use href="/assets/sprite.svg#quality"></use>
-                        </svg>
-                        <h3>Smart Quality</h3>
-                        <p>Advanced algorithms maximize quality at smallest file sizes</p>
-                    </article>
-                    
-                    <article class="feature-card">
-                        <svg class="feature-icon" width="48" height="48" aria-hidden="true">
-                            <use href="/assets/sprite.svg#devices"></use>
-                        </svg>
-                        <h3>Any Device</h3>
-                        <p>Works perfectly on phones, tablets, and computers</p>
-                    </article>
-                </div>
-            </div>
-        </section>
+  <!-- Upload Section -->
+  <main id="upload">
+    <section class="upload-box">
+      <h2>Upload Your Image</h2>
+      <input type="file" id="imageInput" accept="image/*" />
+      <button onclick="compressImage()">Compress Now</button>
+      <div id="result"></div>
+    </section>
+  </main>
 
-        <!-- How It Works -->
-        <section class="how-it-works">
-            <div class="container">
-                <h2>How to Reduce Image Size</h2>
-                <ol class="steps">
-                    <li>
-                        <span class="step-number">1</span>
-                        <h3>Upload Your Image</h3>
-                        <p>Drag & drop or select any JPG, PNG, GIF, or BMP file</p>
-                    </li>
-                    <li>
-                        <span class="step-number">2</span>
-                        <h3>Adjust Settings</h3>
-                        <p>Choose quality level and output format</p>
-                    </li>
-                    <li>
-                        <span class="step-number">3</span>
-                        <h3>Download Result</h3>
-                        <p>Get your optimized image in one click</p>
-                    </li>
-                </ol>
-            </div>
-        </section>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 ReducePic India. All rights reserved.</p>
+    <a href="blog.html">Read Blog</a>
+  </footer>
 
-        <!-- FAQ Accordion -->
-        <section class="faq">
-            <div class="container">
-                <h2>Frequently Asked Questions</h2>
-                
-                <div class="accordion">
-                    <details>
-                        <summary>
-                            <h3>Is ReducePic really free?</h3>
-                            <svg class="accordion-icon" width="16" height="16" aria-hidden="true">
-                                <use href="/assets/sprite.svg#chevron"></use>
-                            </svg>
-                        </summary>
-                        <div class="accordion-content">
-                            <p>Yes! ReducePic is completely free with no hidden costs, watermarks, or registration required. We may offer premium features in the future, but core compression will always remain free.</p>
-                        </div>
-                    </details>
-                    
-                    <details>
-                        <summary>
-                            <h3>How does browser compression work?</h3>
-                            <svg class="accordion-icon" width="16" height="16" aria-hidden="true">
-                                <use href="/assets/sprite.svg#chevron"></use>
-                            </svg>
-                        </summary>
-                        <div class="accordion-content">
-                            <p>Your images are processed entirely in your web browser using JavaScript. This means your files never get uploaded to any server, ensuring complete privacy and faster processing.</p>
-                        </div>
-                    </details>
-                    
-                    <details>
-                        <summary>
-                            <h3>What's the maximum image size?</h3>
-                            <svg class="accordion-icon" width="16" height="16" aria-hidden="true">
-                                <use href="/assets/sprite.svg#chevron"></use>
-                            </svg>
-                        </summary>
-                        <div class="accordion-content">
-                            <p>You can compress images up to 25MB. For best performance with large images, we recommend using Chrome or Firefox on a computer.</p>
-                        </div>
-                    </details>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- App Footer -->
-    <footer class="app-footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="/" class="logo">
-                        <svg width="32" height="32" aria-hidden="true">
-                            <use href="/assets/sprite.svg#logo"></use>
-                        </svg>
-                        <span>ReducePic</span>
-                    </a>
-                    <p class="tagline">The free image optimizer that works in your browser</p>
-                </div>
-                
-                <nav class="footer-nav" aria-label="Footer">
-                    <h3 class="nav-title">Resources</h3>
-                    <ul>
-                        <li><a href="/blog">Blog</a></li>
-                        <li><a href="/tools">All Tools</a></li>
-                        <li><a href="/api">API</a></li>
-                    </ul>
-                </nav>
-                
-                <nav class="footer-nav" aria-label="Legal">
-                    <h3 class="nav-title">Legal</h3>
-                    <ul>
-                        <li><a href="/privacy">Privacy Policy</a></li>
-                        <li><a href="/terms">Terms of Service</a></li>
-                        <li><a href="/cookies">Cookie Policy</a></li>
-                    </ul>
-                </nav>
-                
-                <div class="footer-cta">
-                    <h3>Need Help?</h3>
-                    <a href="/contact" class="secondary-btn">Contact Us</a>
-                    <div class="social-links">
-                        <a href="https://twitter.com/reducepic" aria-label="Twitter">
-                            <svg width="24" height="24" aria-hidden="true">
-                                <use href="/assets/sprite.svg#twitter"></use>
-                            </svg>
-                        </a>
-                        <a href="https://github.com/reducepic" aria-label="GitHub">
-                            <svg width="24" height="24" aria-hidden="true">
-                                <use href="/assets/sprite.svg#github"></use>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-meta">
-                <p>&copy; <span id="current-year"></span> ReducePic.in. All rights reserved.</p>
-                <p>Made with ♥ for a faster web</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Progressive Enhancement -->
-    <noscript>
-        <div class="noscript-warning">
-            <p>⚠️ JavaScript is required for image compression. Please enable JavaScript to use this tool.</p>
-        </div>
-    </noscript>
-
-    <!-- Lazy-Loaded Scripts -->
-    <script>
-        // Set current year
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        
-        // Load web fonts asynchronously
-        WebFontConfig = {
-            google: { families: ['Roboto:400,500,700'] }
-        };
-        (function(d) {
-            var wf = d.createElement('script'), s = d.scripts[0];
-            wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
-            wf.async = true;
-            s.parentNode.insertBefore(wf, s);
-        })(document);
-        
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
-    </script>
-    
-    <!-- Main App Script (Deferred) -->
-    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.1.1/dist/compressor.min.js" crossorigin defer></script>
-    <script src="js/app.min.js" defer></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
