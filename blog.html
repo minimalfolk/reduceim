@@ -14,13 +14,38 @@
   </header>
 
   <main class="blog-list" id="blogList">
-    <!-- Blog posts will load here from blog-posts/blogs.json -->
+    <!-- Blog posts will load here from blog/blogs.json -->
   </main>
 
   <footer class="footer">
     <p>&copy; 2025 ReducePic India. All rights reserved.</p>
   </footer>
 
-  <script src="js/blog.js"></script>
+  <script>
+    // Fetch blog posts from blog/blogs.json
+    fetch('blog/blogs.json')
+      .then(res => res.json())
+      .then(blogs => {
+        blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const blogList = document.getElementById("blogList");
+
+        blogs.forEach(blog => {
+          const post = document.createElement("div");
+          post.className = "blog-item";
+          post.innerHTML = `
+            <a href="blog/${blog.file}">
+              <h2>${blog.title}</h2>
+              <p class="date">${new Date(blog.date).toDateString()}</p>
+            </a>
+          `;
+          blogList.appendChild(post);
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load blog posts:", err);
+        document.getElementById("blogList").innerHTML = "<p>Unable to load blog posts.</p>";
+      });
+  </script>
 </body>
 </html>
