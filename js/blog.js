@@ -55,7 +55,7 @@ function createBlogPostElement(blog) {
     day: 'numeric'
   });
   
-  // Create HTML structure
+  // Create HTML structure - updated paths to use 'blog/' instead of 'blog-posts/'
   post.innerHTML = `
     <a href="blog/${blog.file}" class="blog-link">
       ${blog.image ? `<img src="blog/${blog.image}" alt="${blog.title}" class="blog-image">` : ''}
