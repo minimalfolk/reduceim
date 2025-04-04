@@ -1,36 +1,26 @@
-<!-- blog.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog - ReducePic India</title>
   <link rel="stylesheet" href="css/blog.css" />
 </head>
 <body>
-  <header>
+
+  <header class="blog-header">
     <h1>ReducePic Blog</h1>
-    <p>Read latest tips and updates</p>
+    <p>Tips, tricks, and updates from the world of image compression.</p>
   </header>
 
-  <main>
-    <div class="blog-list">
-      <div class="blog-card">
-        <a href="blog-posts/how-to-compress.html">
-          <h2>How to Compress Images for Instagram</h2>
-          <p class="date">April 4, 2025</p>
-          <p>Step-by-step guide to compress photos without losing quality.</p>
-        </a>
-      </div>
-
-      <div class="blog-card">
-        <a href="blog-posts/top-5-tools.html">
-          <h2>Top 5 Image Compression Tools (2025)</h2>
-          <p class="date">April 2, 2025</p>
-          <p>We compare the best tools and rate them with pros and cons.</p>
-        </a>
-      </div>
-    </div>
+  <main class="blog-list" id="blogList">
+    <!-- Blog posts will load here from blog-posts/blogs.json -->
   </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 ReducePic India. All rights reserved.</p>
+  </footer>
+
+  <script src="js/blog.js"></script>
 </body>
 </html>
