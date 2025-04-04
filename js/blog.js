@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   `;
 
-  fetch('blog-posts/blogs.json')
+  fetch('blog/blogs.json')
     .then(res => {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -57,8 +57,8 @@ function createBlogPostElement(blog) {
   
   // Create HTML structure
   post.innerHTML = `
-    <a href="blog-posts/${blog.file}" class="blog-link">
-      ${blog.image ? `<img src="blog-posts/${blog.image}" alt="${blog.title}" class="blog-image">` : ''}
+    <a href="blog/${blog.file}" class="blog-link">
+      ${blog.image ? `<img src="blog/${blog.image}" alt="${blog.title}" class="blog-image">` : ''}
       <div class="blog-content">
         <h2 class="blog-title">${blog.title}</h2>
         <p class="blog-date">${formattedDate}</p>
