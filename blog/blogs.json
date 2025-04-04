@@ -1,48 +1,7 @@
 [
   {
-    "title": "How to Compress Images for Instagram Without Losing Quality",
-    "slug": "instagram-image-compression-guide",
+    "title": "How to Compress Images Without Losing Quality",
     "date": "2025-04-04",
-    "file": "blog/how-to-compress.html",
-    "excerpt": "Learn the best practices for compressing images for Instagram while maintaining perfect quality using ReducePic India.",
-    "image": "instagram-compression.jpg",
-    "tags": ["instagram", "compression", "tutorial"],
-    "read_time": "3 min",
-    "author": "ReducePic Team",
-    "featured": true
-  },
-  {
-    "title": "Why ReducePic India is Different from Other Image Compressors",
-    "slug": "why-reducepic-different",
-    "date": "2025-04-02",
-    "file": "why-reducepic-different.html",
-    "excerpt": "Discover what makes ReducePic India stand out in the crowded space of online image compression tools.",
-    "image": "reducepic-comparison.jpg",
-    "tags": ["features", "comparison", "technology"],
-    "read_time": "4 min",
-    "author": "ReducePic Team",
-    "featured": true
-  },
-  {
-    "title": "The Ultimate Guide to Image File Formats",
-    "slug": "image-formats-guide",
-    "date": "2025-03-28",
-    "file": "image-formats-guide.html",
-    "excerpt": "JPEG, PNG, WebP - Learn which format to use for different scenarios and how to optimize each one.",
-    "image": "file-formats-comparison.jpg",
-    "tags": ["formats", "guide", "optimization"],
-    "read_time": "5 min",
-    "author": "Image Quality Expert"
-  },
-  {
-    "title": "How We Built ReducePic: Technology Behind the Scenes",
-    "slug": "reducepic-technology",
-    "date": "2025-03-25",
-    "file": "technology-behind.html",
-    "excerpt": "A technical deep dive into the algorithms and architecture powering ReducePic India's compression engine.",
-    "image": "tech-background.jpg",
-    "tags": ["technology", "development", "algorithms"],
-    "read_time": "6 min",
-    "author": "CTO, ReducePic"
+    "file": "../blog/how-to-compress.html"
   }
 ]
