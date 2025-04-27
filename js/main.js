@@ -208,3 +208,152 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.removeChild(downloadLink);
     });
 });
+const uploadBox = document.getElementById('uploadBox');
+    const preview = document.getElementById('preview');
+    const imageSize = document.getElementById('imageSize');
+    const reduceSize = document.getElementById('reduceSize');
+    const processing = document.getElementById('processing');
+    const compressedImg = document.getElementById('compressedImg');
+    const stats = document.getElementById('stats');
+    const downloadButton = document.getElementById('downloadButton');
+
+    let originalFile, compressedBlob;
+
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    // File Upload Handling
+    uploadBox.addEventListener('click', () => fileInput.click());
+    uploadBox.addEventListener('dragover', (e) => e.preventDefault());
+    uploadBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      handleFile(file);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      handleFile(file);
+    });
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        imageSize.textContent = `Image Size: ${(file.size / 1024).toFixed(2)} KB`;
+        reduceSize.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressImage() {
+      if (!originalFile) return;
+
+      processing.style.display = 'block';
+      const img = new Image();
+      img.src = URL.createObjectURL(originalFile);
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(
+          (blob) => {
+            compressedBlob = blob;
+            compressedImg.src = URL.createObjectURL(blob);
+            compressedImg.style.display = 'block';
+            downloadButton.style.display = 'block';
+
+            const originalSize = (originalFile.size / 1024).toFixed(2);
+            const compressedSize = (blob.size / 1024).toFixed(2);
+            const sizeReduction = (((originalSize - compressedSize) / originalSize) * 100).toFixed(2);
+
+            stats.textContent = `Size reduced by ${sizeReduction}% (${originalSize} KB → ${compressedSize} KB)`;
+            processing.style.display = 'none';
+          },
+          'image/jpeg',
+          0.8 // Quality (0.8 = 80%)
+        );
+      };
+    }
+
+    function reduceBySize() {
+      const targetSize = parseFloat(document.getElementById('sizeInput').value);
+      if (!targetSize || !originalFile) return;
+
+      processing.style.display = 'block';
+      const img = new Image();
+      img.src = URL.createObjectURL(originalFile);
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let quality = 0.8;
+        let blob;
+
+        const compress = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob(
+            (b) => {
+              blob = b;
+              const compressedSize = (blob.size / 1024).toFixed(2);
+
+              if (compressedSize > targetSize && quality > 0.1) {
+                quality -= 0.1;
+                compress();
+              } else {
+                compressedBlob = blob;
+                compressedImg.src = URL.createObjectURL(blob);
+                compressedImg.style.display = 'block';
+                downloadButton.style.display = 'block';
+
+                const originalSize = (originalFile.size / 1024).toFixed(2);
+                const sizeReduction = (((originalSize - compressedSize) / originalSize) * 100).toFixed(2);
+
+                stats.textContent = `Size reduced by ${sizeReduction}% (${originalSize} KB → ${compressedSize} KB)`;
+                processing.style.display = 'none';
+              }
+            },
+            'image/jpeg',
+            quality
+          );
+        };
+
+        compress();
+      };
+    }
+
+    // Download Compressed Image
+    downloadButton.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(compressedBlob);
+      link.download = `compressed-${originalFile.name}`;
+      link.click();
+    });
+
+    // Share on Social Media
+    function shareOnFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    }
+
+    function shareOnInstagram() {
+      alert('Instagram sharing is not supported directly. Download the image and share it manually.');
+    }
