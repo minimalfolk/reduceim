@@ -8,7 +8,7 @@
     <meta name="robots" content="index, follow">
 
     <!-- SEO Optimized Title -->
-    <title>Reduce Image Size – Fast & Free Image Compressor for JPG, PNG, GIF, BMP online</title>
+    <title>Resize image Online – Fast & Free indian Image Compressor for JPG, PNG, GIF, BMP</title>
 
     <!-- Open Graph for Social Sharing -->
     <meta property="og:title" content="Reduce Image Size Online – Free & Fast Image Compressor | Reduce Pic">
@@ -69,53 +69,68 @@
         </nav>
     </header>
 
-    <main aria-label="Image Compression Tool">
-        <section class="compress-image">
-            <h1>Reduce Image Size</h1>
-            <p>Upload an image and instantly reduce its size without losing quality.</p>
+    <main class="container">
+  <h2>Ultimate Image Compressor</h2>
 
-            <div class="upload-box" id="uploadBox">
-                <p>Drag and drop or click here to upload an image.</p>
-                <input type="file" id="imageInput" accept="image/*" hidden>
-            </div>
+  <!-- Upload Section -->
+  <div class="upload-box" id="uploadBox">
+    <p>Drag & Drop or Click to Upload</p>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+  </div>
 
-            <div id="errorMessage" class="error-message" hidden></div>
+  <div id="errorMessage" class="error-message" hidden></div>
 
-            <figure id="originalPreview" class="preview-container" hidden>
-                <img id="originalImage" alt="Uploaded image preview">
-                <figcaption id="originalDetails"></figcaption>
-            </figure>
+  <!-- Preview Original -->
+  <figure id="originalPreview" class="preview-container" hidden>
+    <img id="originalImage" alt="Uploaded Image Preview">
+    <figcaption id="originalDetails"></figcaption>
+  </figure>
 
-            <div class="compression-options">
-                <label for="compressRange">Reduce image size by:</label>
-                <input type="range" id="compressRange" min="1" max="99" value="50">
-                <span id="compressValue">50%</span>
+  <!-- Options -->
+  <div class="compression-options" hidden id="compressionOptions">
 
-                <div class="format-selection">
-                    <label for="formatSelect">Convert to:</label>
-                    <select id="formatSelect">
-                        <option value="image/jpeg">JPG</option>
-                        <option value="image/png">PNG</option>
-                        <option value="image/gif">GIF</option>
-                        <option value="image/bmp">BMP</option>
-                    </select>
-                </div>
+    <!-- Resize Inputs -->
+    <div class="resize-options">
+      <h3>Resize Image (Optional)</h3>
+      <input type="number" id="widthInput" placeholder="Width (px)">
+      <input type="number" id="heightInput" placeholder="Height (px)">
+    </div>
 
-                <button id="compressBtn" disabled>Reduce Now</button>
-            </div>
+    <!-- Exact Size Input -->
+    <div class="exact-size">
+      <h3>Or Set Target Size (KB)</h3>
+      <input type="number" id="sizeInput" placeholder="Target size in KB">
+    </div>
 
-            <div id="loadingIndicator" hidden>
-                <p>Reducing Your Image...</p>
-            </div>
+    <!-- Format Selection -->
+    <div class="format-selection">
+      <label for="formatSelect">Convert Format:</label>
+      <select id="formatSelect">
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/jpg">JPG</option>
+        <option value="image/png">PNG</option>
+        <option value="image/webp">WEBP</option>
+        <option value="image/gif">GIF</option>
+        <option value="image/bmp">BMP</option>
+      </select>
+    </div>
 
-            <figure id="compressedPreview" class="preview-container" hidden>
-                <img id="compressedImage" alt="Compressed image preview">
-                <figcaption id="compressedDetails"></figcaption>
-                <p id="sizeSaved"></p>
-                <button id="downloadBtn" disabled>Download Now</button>
-            </figure>
-        </section>
+    <button id="compressBtn">Compress Now</button>
+  </div>
 
+  <!-- Loading -->
+  <div id="loadingIndicator" hidden>
+    <p>Processing Your Image...</p>
+  </div>
+
+  <!-- Compressed Preview -->
+  <figure id="compressedPreview" class="preview-container" hidden>
+    <img id="compressedImage" alt="Compressed Image Preview">
+    <figcaption id="compressedDetails"></figcaption>
+    <p id="sizeSaved"></p>
+    <button id="downloadBtn" disabled>Download Image</button>
+  </figure>
+</main>
         <!-- SEO-Optimized Features Section -->
     <section class="features">
         <h2>Why Use Our Free Image Compressor?</h2>
