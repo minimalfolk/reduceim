@@ -357,3 +357,37 @@ const uploadBox = document.getElementById('uploadBox');
     function shareOnInstagram() {
       alert('Instagram sharing is not supported directly. Download the image and share it manually.');
     }
+
+  const { jsPDF } = window.jspdf;
+
+  async function convertImageToPDF(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = function(event) {
+      const imgData = event.target.result;
+      const pdf = new jsPDF();
+
+      // Get image size
+      const img = new Image();
+      img.src = imgData;
+      img.onload = function() {
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (img.height * imgWidth) / img.width;
+
+        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+        pdf.save('converted.pdf');
+      };
+    };
+  }
+
+  document.getElementById('yourUploadInputId').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const selectedFormat = document.getElementById('formatSelect').value;
+
+    if (selectedFormat === 'application/pdf') {
+      convertImageToPDF(file);
+    } else {
+      // your existing code for normal image conversion
+    }
+  });
