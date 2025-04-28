@@ -18,14 +18,13 @@
             margin: 20px 0;
             cursor: pointer;
         }
-        .upload-area:hover {
-            background-color: #f9f9f9;
+        .upload-area.highlight {
+            background-color: #f0f0f0;
         }
         .size-input {
             margin: 20px 0;
         }
         .resize-options {
-            display: none;
             margin: 15px 0;
             padding: 15px;
             background-color: #f5f5f5;
@@ -43,14 +42,23 @@
         button:hover {
             background-color: #45a049;
         }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
         .preview-container {
             margin: 20px 0;
-            display: none;
         }
         .preview-image {
             max-width: 100%;
             max-height: 300px;
             margin: 10px 0;
+            display: none;
+        }
+        .file-info {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
         }
         .dimension-controls {
             display: flex;
@@ -65,10 +73,9 @@
             width: 100%;
             margin: 5px 0;
         }
-        .file-info {
+        .error-message {
+            color: red;
             margin: 10px 0;
-            font-size: 14px;
-            color: #666;
         }
     </style>
 </head>
@@ -84,6 +91,7 @@
     <div class="preview-container" id="previewContainer">
         <img id="previewImage" class="preview-image" src="#" alt="Preview">
         <div class="file-info" id="fileInfo"></div>
+        <div class="error-message" id="errorMessage"></div>
     </div>
     
     <div class="size-input">
@@ -121,9 +129,10 @@
         </div>
     </div>
     
-    <button id="reduceButton">Reduce Image</button>
+    <button id="reduceButton" disabled>Reduce Image</button>
     
     <script>
+        // DOM Elements
         const dropArea = document.getElementById('dropArea');
         const fileInput = document.getElementById('fileInput');
         const reduceButton = document.getElementById('reduceButton');
@@ -131,6 +140,7 @@
         const previewContainer = document.getElementById('previewContainer');
         const previewImage = document.getElementById('previewImage');
         const fileInfo = document.getElementById('fileInfo');
+        const errorMessage = document.getElementById('errorMessage');
         const customSizeCheckbox = document.getElementById('customSizeCheckbox');
         const resizeOptions = document.getElementById('resizeOptions');
         const widthInput = document.getElementById('width');
@@ -139,111 +149,167 @@
         const percentValue = document.getElementById('percentValue');
         const maintainAspect = document.getElementById('maintainAspect');
         
+        // State variables
         let currentFile = null;
         let originalWidth = 0;
         let originalHeight = 0;
+        let aspectRatio = 1;
         
-        // Toggle resize options when checkbox is clicked
-        customSizeCheckbox.addEventListener('change', function() {
-            resizeOptions.style.display = this.checked ? 'block' : 'none';
-        });
+        // Initialize
+        function init() {
+            // Set initial state
+            resizeOptions.style.display = customSizeCheckbox.checked ? 'block' : 'none';
+            reduceButton.disabled = true;
+            
+            // Event listeners
+            setupEventListeners();
+        }
         
-        // Initialize with resize options visible
-        resizeOptions.style.display = 'block';
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Toggle resize options
+            customSizeCheckbox.addEventListener('change', function() {
+                resizeOptions.style.display = this.checked ? 'block' : 'none';
+            });
+            
+            // Update percentage display
+            resizePercent.addEventListener('input', function() {
+                percentValue.textContent = this.value + '%';
+                if (currentFile) {
+                    updateDimensionsByPercentage(this.value);
+                }
+            });
+            
+            // Handle aspect ratio maintenance
+            widthInput.addEventListener('input', updateHeightFromWidth);
+            heightInput.addEventListener('input', updateWidthFromHeight);
+            
+            // File selection
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            // Drag and drop events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            fileInput.addEventListener('change', handleFileSelect);
+        }
         
-        // Update percentage value when slider changes
-        resizePercent.addEventListener('input', function() {
-            percentValue.textContent = this.value + '%';
-        });
-        
-        // Handle aspect ratio maintenance
-        widthInput.addEventListener('input', function() {
-            if (maintainAspect.checked && originalWidth && originalHeight) {
-                heightInput.value = Math.round((originalHeight / originalWidth) * this.value);
-            }
-        });
-        
-        heightInput.addEventListener('input', function() {
-            if (maintainAspect.checked && originalWidth && originalHeight) {
-                widthInput.value = Math.round((originalWidth / originalHeight) * this.value);
-            }
-        });
-        
-        // File selection handlers
-        dropArea.addEventListener('click', () => fileInput.click());
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, preventDefaults, false);
-        });
-        
+        // Prevent default drag/drop behavior
         function preventDefaults(e) {
             e.preventDefault();
             e.stopPropagation();
         }
         
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropArea.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, unhighlight, false);
-        });
-        
+        // Highlight drop area
         function highlight() {
-            dropArea.style.backgroundColor = '#f0f0f0';
+            dropArea.classList.add('highlight');
         }
         
+        // Remove highlight
         function unhighlight() {
-            dropArea.style.backgroundColor = '';
+            dropArea.classList.remove('highlight');
         }
         
-        dropArea.addEventListener('drop', handleDrop, false);
-        
+        // Handle dropped files
         function handleDrop(e) {
             const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
+            handleFiles(dt.files);
         }
         
-        fileInput.addEventListener('change', function() {
+        // Handle file selection
+        function handleFileSelect() {
             handleFiles(this.files);
-        });
-        
-        function handleFiles(files) {
-            if (files && files.length) {
-                currentFile = files[0];
-                
-                // Display preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                    
-                    // Get original dimensions
-                    const img = new Image();
-                    img.onload = function() {
-                        originalWidth = img.width;
-                        originalHeight = img.height;
-                        updateFileInfo(currentFile, img.width, img.height);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(currentFile);
-            }
         }
         
-        function updateFileInfo(file, width, height) {
+        // Process selected files
+        function handleFiles(files) {
+            errorMessage.textContent = '';
+            
+            if (!files || files.length === 0) {
+                return;
+            }
+            
+            const file = files[0];
+            
+            // Validate file type
+            if (!file.type.match('image.*')) {
+                errorMessage.textContent = 'Please select an image file (JPEG, PNG, etc.)';
+                return;
+            }
+            
+            currentFile = file;
+            
+            // Read and display the image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.onload = function() {
+                    originalWidth = previewImage.naturalWidth;
+                    originalHeight = previewImage.naturalHeight;
+                    aspectRatio = originalWidth / originalHeight;
+                    
+                    updateFileInfo(file);
+                    updateDimensionInputs();
+                    
+                    previewImage.style.display = 'block';
+                    reduceButton.disabled = false;
+                };
+                previewImage.src = e.target.result;
+            };
+            reader.onerror = function() {
+                errorMessage.textContent = 'Error reading file';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Update file info display
+        function updateFileInfo(file) {
             const sizeInKB = (file.size / 1024).toFixed(2);
             fileInfo.innerHTML = `
                 <strong>${file.name}</strong><br>
                 Original Size: ${sizeInKB} KB<br>
-                Dimensions: ${width} × ${height} px
+                Dimensions: ${originalWidth} × ${originalHeight} px
             `;
         }
         
+        // Update dimension inputs based on percentage
+        function updateDimensionsByPercentage(percent) {
+            const scale = percent / 100;
+            widthInput.value = Math.round(originalWidth * scale);
+            heightInput.value = Math.round(originalHeight * scale);
+        }
+        
+        // Update height based on width while maintaining aspect ratio
+        function updateHeightFromWidth() {
+            if (!maintainAspect.checked || !widthInput.value) return;
+            heightInput.value = Math.round(widthInput.value / aspectRatio);
+        }
+        
+        // Update width based on height while maintaining aspect ratio
+        function updateWidthFromHeight() {
+            if (!maintainAspect.checked || !heightInput.value) return;
+            widthInput.value = Math.round(heightInput.value * aspectRatio);
+        }
+        
+        // Initialize dimension inputs
+        function updateDimensionInputs() {
+            widthInput.placeholder = originalWidth;
+            heightInput.placeholder = originalHeight;
+        }
+        
+        // Handle reduce button click
         reduceButton.addEventListener('click', function() {
             if (!currentFile) {
-                alert('Please select an image first');
+                errorMessage.textContent = 'Please select an image first';
                 return;
             }
             
@@ -252,14 +318,22 @@
             const height = heightInput.value ? parseInt(heightInput.value) : null;
             const percent = parseInt(resizePercent.value) / 100;
             
-            console.log('Reducing to:', targetSizeKB, 'KB');
-            console.log('Resize options:', { width, height, percent });
+            console.log('Processing with:', {
+                targetSizeKB,
+                width,
+                height,
+                percent
+            });
             
-            // Here you would implement the actual image compression and resizing
-            // This would involve using the Canvas API or a library like compressorjs
-            
-            alert('Image processing would happen here. In a real implementation, this would compress the image to ~' + targetSizeKB + 'KB and apply the resize options.');
+            // Here you would implement the actual image processing
+            alert('Image processing would happen here. In a real implementation, this would: \n' +
+                  `- Resize to approximately ${width || 'original'} × ${height || 'original'} px\n` +
+                  `- Target file size: ${targetSizeKB} KB\n` +
+                  `- Using ${percent * 100}% scale`);
         });
+        
+        // Initialize the application
+        init();
     </script>
 </body>
 </html>
