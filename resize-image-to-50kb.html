@@ -1,339 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Size Reducer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .upload-area {
-            border: 2px dashed #ccc;
-            padding: 40px;
-            margin: 20px 0;
-            cursor: pointer;
-        }
-        .upload-area.highlight {
-            background-color: #f0f0f0;
-        }
-        .size-input {
-            margin: 20px 0;
-        }
-        .resize-options {
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        .preview-container {
-            margin: 20px 0;
-        }
-        .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            margin: 10px 0;
-            display: none;
-        }
-        .file-info {
-            margin: 10px 0;
-            font-size: 14px;
-            color: #666;
-        }
-        .dimension-controls {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-        .dimension-input {
-            width: 45%;
-        }
-        input[type="number"], input[type="range"] {
-            padding: 8px;
-            width: 100%;
-            margin: 5px 0;
-        }
-        .error-message {
-            color: red;
-            margin: 10px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Resizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    /* Header Styles */
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .logo {
+      width: 50px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    /* Upload Section Styles */
+    .upload-box {
+      padding: 20px;
+      text-align: center;
+      background-color: #f1f1f1;
+      cursor: pointer;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 400px;
+    }
+
+    .upload-box:hover {
+      background-color: #e0e0e0;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Image Preview Section */
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .image-preview {
+      position: relative;
+      max-width: 150px;
+      max-height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    .image-preview p {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 5px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* Input and Buttons */
+    .size-input {
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 14px;
+      width: 150px;
+      display: inline-block;
+    }
+
+    .custom-size-text {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .download-button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .download-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Loading and Processing */
+    .processing {
+      display: none;
+      text-align: center;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Reduce Image Size in KB Online</h1>
-    
-    <div class="upload-area" id="dropArea">
-        <p><strong>Select Images</strong></p>
-        <p>Select Or Drag & Drop Images Here</p>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;">
-    </div>
-    
-    <div class="preview-container" id="previewContainer">
-        <img id="previewImage" class="preview-image" src="#" alt="Preview">
-        <div class="file-info" id="fileInfo"></div>
-        <div class="error-message" id="errorMessage"></div>
-    </div>
-    
-    <div class="size-input">
-        <label>
-            <input type="checkbox" id="customSizeCheckbox" checked> Custom Size Adjustments
-        </label>
-        <p>Enter Size in KB:</p>
-        <input type="number" id="targetSize" value="60" min="10">
-    </div>
-    
-    <div class="resize-options" id="resizeOptions">
-        <h3>Resize Options</h3>
-        
-        <div class="dimension-controls">
-            <div class="dimension-input">
-                <label for="width">Width (px):</label>
-                <input type="number" id="width" placeholder="Auto">
-            </div>
-            <div class="dimension-input">
-                <label for="height">Height (px):</label>
-                <input type="number" id="height" placeholder="Auto">
-            </div>
-        </div>
-        
-        <div>
-            <label for="resizePercent">Resize Percentage:</label>
-            <input type="range" id="resizePercent" min="10" max="100" value="100">
-            <span id="percentValue">100%</span>
-        </div>
-        
-        <div>
-            <label>
-                <input type="checkbox" id="maintainAspect" checked> Maintain Aspect Ratio
-            </label>
-        </div>
-    </div>
-    
-    <button id="reduceButton" disabled>Reduce Image</button>
-    
-    <script>
-        // DOM Elements
-        const dropArea = document.getElementById('dropArea');
-        const fileInput = document.getElementById('fileInput');
-        const reduceButton = document.getElementById('reduceButton');
-        const targetSizeInput = document.getElementById('targetSize');
-        const previewContainer = document.getElementById('previewContainer');
-        const previewImage = document.getElementById('previewImage');
-        const fileInfo = document.getElementById('fileInfo');
-        const errorMessage = document.getElementById('errorMessage');
-        const customSizeCheckbox = document.getElementById('customSizeCheckbox');
-        const resizeOptions = document.getElementById('resizeOptions');
-        const widthInput = document.getElementById('width');
-        const heightInput = document.getElementById('height');
-        const resizePercent = document.getElementById('resizePercent');
-        const percentValue = document.getElementById('percentValue');
-        const maintainAspect = document.getElementById('maintainAspect');
-        
-        // State variables
-        let currentFile = null;
-        let originalWidth = 0;
-        let originalHeight = 0;
-        let aspectRatio = 1;
-        
-        // Initialize
-        function init() {
-            // Set initial state
-            resizeOptions.style.display = customSizeCheckbox.checked ? 'block' : 'none';
-            reduceButton.disabled = true;
-            
-            // Event listeners
-            setupEventListeners();
+
+  <!-- Header -->
+  <header>
+    <img src="logo.png" alt="Logo" class="logo">
+    Image Resizer
+  </header>
+
+  <!-- Upload Section -->
+  <div class="upload-box" id="uploadBox">
+    Click to Upload Image
+  </div>
+  <input type="file" id="fileInput" multiple>
+  
+  <!-- Custom Size Input -->
+  <div>
+    <input type="number" id="sizeInput" class="size-input" placeholder="Enter custom size (KB)">
+    <p id="customSizeText" class="custom-size-text">Custom size will be shown here.</p>
+  </div>
+
+  <!-- Processing Section -->
+  <div id="processing" class="processing">Processing...</div>
+
+  <!-- Image Previews and Download Buttons -->
+  <div id="imageContainer" class="image-container"></div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadBox = document.getElementById('uploadBox');
+    const imageContainer = document.getElementById('imageContainer');
+    const sizeInput = document.getElementById('sizeInput');
+    const customSizeText = document.getElementById('customSizeText');
+    const processing = document.getElementById('processing');
+
+    // Handle file input and image previews
+    uploadBox.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      imageContainer.innerHTML = ''; // Clear previous previews
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) {
+          alert('Please upload only image files.');
+          continue;
         }
-        
-        // Setup all event listeners
-        function setupEventListeners() {
-            // Toggle resize options
-            customSizeCheckbox.addEventListener('change', function() {
-                resizeOptions.style.display = this.checked ? 'block' : 'none';
-            });
-            
-            // Update percentage display
-            resizePercent.addEventListener('input', function() {
-                percentValue.textContent = this.value + '%';
-                if (currentFile) {
-                    updateDimensionsByPercentage(this.value);
-                }
-            });
-            
-            // Handle aspect ratio maintenance
-            widthInput.addEventListener('input', updateHeightFromWidth);
-            heightInput.addEventListener('input', updateWidthFromHeight);
-            
-            // File selection
-            dropArea.addEventListener('click', () => fileInput.click());
-            
-            // Drag and drop events
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, preventDefaults, false);
-            });
-            
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropArea.addEventListener(eventName, highlight, false);
-            });
-            
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, unhighlight, false);
-            });
-            
-            dropArea.addEventListener('drop', handleDrop, false);
-            fileInput.addEventListener('change', handleFileSelect);
-        }
-        
-        // Prevent default drag/drop behavior
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        // Highlight drop area
-        function highlight() {
-            dropArea.classList.add('highlight');
-        }
-        
-        // Remove highlight
-        function unhighlight() {
-            dropArea.classList.remove('highlight');
-        }
-        
-        // Handle dropped files
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            handleFiles(dt.files);
-        }
-        
-        // Handle file selection
-        function handleFileSelect() {
-            handleFiles(this.files);
-        }
-        
-        // Process selected files
-        function handleFiles(files) {
-            errorMessage.textContent = '';
-            
-            if (!files || files.length === 0) {
-                return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imgPreview = document.createElement('div');
+          imgPreview.classList.add('image-preview');
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          imgPreview.appendChild(img);
+          const sizeText = document.createElement('p');
+          sizeText.textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
+          imgPreview.appendChild(sizeText);
+
+          // Compress the image and add download link
+          const compressButton = document.createElement('button');
+          compressButton.textContent = 'Compress';
+          compressButton.classList.add('download-button');
+          compressButton.addEventListener('click', () => compressImage(file, img, imgPreview));
+
+          imgPreview.appendChild(compressButton);
+          imageContainer.appendChild(imgPreview);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Compress the image based on custom size
+    function compressImage(originalFile, imgElement, previewContainer) {
+      const targetSize = parseFloat(sizeInput.value) * 1024; // Convert KB to bytes
+      if (!targetSize || targetSize <= 0) return alert('Please enter a valid size in KB.');
+
+      processing.style.display = 'block';
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.src = imgElement.src;
+
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        let quality = 0.9;
+        let compressedBlob;
+
+        const resizeAndCompress = () => {
+          canvas.toBlob((blob) => {
+            compressedBlob = blob;
+            if (compressedBlob.size > targetSize && quality > 0.1) {
+              quality -= 0.1;
+              resizeAndCompress();
+            } else {
+              const newImg = document.createElement('img');
+              newImg.src = URL.createObjectURL(compressedBlob);
+              previewContainer.replaceChild(newImg, imgElement);
+
+              const downloadButton = document.createElement('button');
+              downloadButton.textContent = 'Download';
+              downloadButton.classList.add('download-button');
+              downloadButton.addEventListener('click', () => downloadCompressedImage(compressedBlob, originalFile.name));
+              previewContainer.appendChild(downloadButton);
+
+              processing.style.display = 'none';
             }
-            
-            const file = files[0];
-            
-            // Validate file type
-            if (!file.type.match('image.*')) {
-                errorMessage.textContent = 'Please select an image file (JPEG, PNG, etc.)';
-                return;
-            }
-            
-            currentFile = file;
-            
-            // Read and display the image
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.onload = function() {
-                    originalWidth = previewImage.naturalWidth;
-                    originalHeight = previewImage.naturalHeight;
-                    aspectRatio = originalWidth / originalHeight;
-                    
-                    updateFileInfo(file);
-                    updateDimensionInputs();
-                    
-                    previewImage.style.display = 'block';
-                    reduceButton.disabled = false;
-                };
-                previewImage.src = e.target.result;
-            };
-            reader.onerror = function() {
-                errorMessage.textContent = 'Error reading file';
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Update file info display
-        function updateFileInfo(file) {
-            const sizeInKB = (file.size / 1024).toFixed(2);
-            fileInfo.innerHTML = `
-                <strong>${file.name}</strong><br>
-                Original Size: ${sizeInKB} KB<br>
-                Dimensions: ${originalWidth} × ${originalHeight} px
-            `;
-        }
-        
-        // Update dimension inputs based on percentage
-        function updateDimensionsByPercentage(percent) {
-            const scale = percent / 100;
-            widthInput.value = Math.round(originalWidth * scale);
-            heightInput.value = Math.round(originalHeight * scale);
-        }
-        
-        // Update height based on width while maintaining aspect ratio
-        function updateHeightFromWidth() {
-            if (!maintainAspect.checked || !widthInput.value) return;
-            heightInput.value = Math.round(widthInput.value / aspectRatio);
-        }
-        
-        // Update width based on height while maintaining aspect ratio
-        function updateWidthFromHeight() {
-            if (!maintainAspect.checked || !heightInput.value) return;
-            widthInput.value = Math.round(heightInput.value * aspectRatio);
-        }
-        
-        // Initialize dimension inputs
-        function updateDimensionInputs() {
-            widthInput.placeholder = originalWidth;
-            heightInput.placeholder = originalHeight;
-        }
-        
-        // Handle reduce button click
-        reduceButton.addEventListener('click', function() {
-            if (!currentFile) {
-                errorMessage.textContent = 'Please select an image first';
-                return;
-            }
-            
-            const targetSizeKB = parseInt(targetSizeInput.value);
-            const width = widthInput.value ? parseInt(widthInput.value) : null;
-            const height = heightInput.value ? parseInt(heightInput.value) : null;
-            const percent = parseInt(resizePercent.value) / 100;
-            
-            console.log('Processing with:', {
-                targetSizeKB,
-                width,
-                height,
-                percent
-            });
-            
-            // Here you would implement the actual image processing
-            alert('Image processing would happen here. In a real implementation, this would: \n' +
-                  `- Resize to approximately ${width || 'original'} × ${height || 'original'} px\n` +
-                  `- Target file size: ${targetSizeKB} KB\n` +
-                  `- Using ${percent * 100}% scale`);
-        });
-        
-        // Initialize the application
-        init();
-    </script>
+          }, 'image/jpeg', quality);
+        };
+
+        resizeAndCompress();
+      };
+    }
+
+    // Download the compressed image
+    function downloadCompressedImage(blob, fileName) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `compressed-${fileName}`;
+      link.click();
+    }
+  </script>
+
 </body>
 </html>
