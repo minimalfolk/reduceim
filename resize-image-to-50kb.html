@@ -1,301 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Resizer</title>
-  <style>
-    /* Reset and general styles */
-    body, h1, p, input, button {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    body {
-      background-color: #f4f4f4;
-      color: #333;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
 
-    /* Header */
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    header img {
-      width: 50px;
-      vertical-align: middle;
-    }
-    header h1 {
-      display: inline;
-      font-size: 24px;
-      margin-left: 10px;
-    }
+        .upload-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            text-align: center;
+        }
 
-    /* Upload Section */
-    .upload-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 2px dashed #007bff;
-      border-radius: 10px;
-      background-color: #fff;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .upload-box:hover {
-      background-color: #f0f8ff;
-    }
-    .upload-box input[type="file"] {
-      display: none;
-    }
+        .upload-box input[type="file"] {
+            display: none;
+        }
 
-    /* Image Previews */
-    .image-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .image-preview {
-      position: relative;
-      max-width: 150px;
-      max-height: 150px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      animation: fadeIn 0.5s forwards;
-    }
-    .image-preview img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: cover;
-    }
-    .image-preview p {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      padding: 5px;
-      border-radius: 5px;
-      font-size: 12px;
-    }
-    .image-preview button {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 12px;
-      display: none;
-    }
-    .image-preview:hover button {
-      display: block;
-    }
+        .upload-box label {
+            cursor: pointer;
+            font-size: 18px;
+        }
 
-    /* Custom Size Input */
-    .size-input-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .size-input-container input {
-      padding: 8px;
-      font-size: 14px;
-      width: 120px;
-      margin-right: 10px;
-    }
-    .size-input-container p {
-      font-size: 14px;
-      color: #333;
-    }
+        #imageContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-    /* Processing Indicator */
-    .processing {
-      display: none;
-      text-align: center;
-      font-size: 16px;
-      margin-top: 20px;
-    }
+        .image-preview {
+            text-align: center;
+            width: 200px;
+        }
 
-    /* Download All Button */
-    .download-all {
-      display: block;
-      width: 200px;
-      margin: 20px auto;
-      padding: 10px;
-      background-color: #28a745;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      text-align: center;
-    }
-    .download-all:hover {
-      background-color: #218838;
-    }
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
 
-    /* Fade-in Animation */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  </style>
+        #processing {
+            display: none;
+            font-size: 18px;
+            color: red;
+        }
+
+        #downloadButton {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <img src="logo.png" alt="Logo">
+<!-- Header -->
+<header>
     <h1>Image Resizer</h1>
-  </header>
+</header>
 
-  <!-- Upload Section -->
-  <div class="upload-box" id="uploadBox">
-    <span>Click or Drag & Drop Images Here</span>
-    <input type="file" id="fileInput" multiple>
-  </div>
+<!-- Upload Box Section -->
+<div class="upload-box" id="uploadBox">
+    <label for="fileInput">Click to Upload Images:</label>
+    <input type="file" id="fileInput" multiple accept="image/*">
+</div>
 
-  <!-- Custom Size Input -->
-  <div class="size-input-container">
-    <input type="number" id="sizeInput" placeholder="Enter size in KB">
-    <p>Enter desired size in KB (e.g., 50, 100, 200)</p>
-  </div>
+<!-- Custom Size Input Section -->
+<div class="size-input-container">
+    <label for="sizeInput">Enter desired size (in KB):</label>
+    <input type="number" id="sizeInput" placeholder="e.g., 100">
+</div>
 
-  <!-- Processing Indicator -->
-  <div class="processing" id="processing">Processing...</div>
+<!-- Resize Button -->
+<button id="resizeButton">Resize All Images</button>
 
-  <!-- Image Previews -->
-  <div class="image-container" id="imageContainer"></div>
+<!-- Processing Indicator -->
+<div id="processing">Processing...</div>
 
-  <!-- Download All Button -->
-  <button class="download-all" id="downloadAllButton" style="display: none;">Download All Compressed Images</button>
+<!-- Image Preview Section -->
+<div id="imageContainer">
+    <!-- Images will be previewed here -->
+</div>
 
-  <script>
+<!-- Download Button -->
+<div id="downloadButton">
+    <button id="downloadBtn">Download Compressed Images</button>
+</div>
+
+<script>
     const fileInput = document.getElementById('fileInput');
     const uploadBox = document.getElementById('uploadBox');
-    const imageContainer = document.getElementById('imageContainer');
-    const sizeInput = document.getElementById('sizeInput');
     const processing = document.getElementById('processing');
-    const downloadAllButton = document.getElementById('downloadAllButton');
+    const imageContainer = document.getElementById('imageContainer');
+    const resizeButton = document.getElementById('resizeButton');
+    const downloadButton = document.getElementById('downloadButton');
+    let images = [];
 
-    let originalFiles = [];
+    // Handle file upload
+    fileInput.addEventListener('change', (e) => {
+        images = [];
+        imageContainer.innerHTML = ''; // Clear previous previews
 
-    // Handle file selection and drag & drop
-    uploadBox.addEventListener('click', () => fileInput.click());
-    uploadBox.addEventListener('dragover', (e) => e.preventDefault());
-    uploadBox.addEventListener('drop', (e) => {
-      e.preventDefault();
-      handleFiles(e.dataTransfer.files);
-    });
-    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        const files = e.target.files;
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = event.target.result;
+                    const imagePreview = document.createElement('div');
+                    imagePreview.classList.add('image-preview');
+                    const imageInfo = document.createElement('div');
+                    imageInfo.textContent = `${file.name} - ${(file.size / 1024).toFixed(2)} KB`;
 
-    function handleFiles(files) {
-      originalFiles = Array.from(files);
-      imageContainer.innerHTML = '';
-      originalFiles.forEach((file, index) => {
-        if (!file.type.startsWith('image/')) {
-          alert('Please upload image files only.');
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imgPreview = document.createElement('div');
-          imgPreview.classList.add('image-preview');
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          imgPreview.appendChild(img);
-          const sizeText = document.createElement('p');
-          sizeText.textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
-          imgPreview.appendChild(sizeText);
-          const compressButton = document.createElement('button');
-          compressButton.textContent = 'Compress';
-          compressButton.addEventListener('click', () => compressImage(file, img, imgPreview));
-          imgPreview.appendChild(compressButton);
-          imageContainer.appendChild(imgPreview);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
+                    imagePreview.appendChild(imgElement);
+                    imagePreview.appendChild(imageInfo);
+                    imageContainer.appendChild(imagePreview);
 
-    // Compress image to target size
-    function compressImage(file, imgElement, previewContainer) {
-      const targetSize = parseFloat(sizeInput.value) * 1024; // Convert KB to bytes
-      if (!targetSize || targetSize <= 0) {
-        alert('Please enter a valid size in KB.');
-        return;
-      }
-      processing.style.display = 'block';
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      img.src = imgElement.src;
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        let quality = 0.9;
-        let compressedBlob;
-        const resizeAndCompress = () => {
-          canvas.toBlob((blob) => {
-            compressedBlob = blob;
-            if (compressedBlob.size > targetSize && quality > 0.1) {
-              quality -= 0.1;
-              resizeAndCompress();
-            } else {
-              const newImg = document.createElement('img');
-              newImg.src = URL.createObjectURL(compressedBlob);
-              previewContainer.replaceChild(newImg, imgElement);
-              const downloadButton = document.createElement('button');
-              downloadButton.textContent = 'Download';
-              downloadButton.addEventListener('click', () => downloadImage(compressedBlob, file.name));
-              previewContainer.appendChild(downloadButton);
-              processing.style.display = 'none';
-              downloadAllButton.style.display = 'block';
+                    images.push({ file, imgElement, imagePreview });
+                };
+                reader.readAsDataURL(file);
             }
-          }, 'image/jpeg', quality);
-        };
-        resizeAndCompress();
-      };
-    }
-
-    // Download compressed image
-    function downloadImage(blob, fileName) {
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `compressed-${fileName}`;
-      link.click();
-    }
-
-    // Download all compressed images
-    downloadAllButton.addEventListener('click', () => {
-      originalFiles.forEach((file, index) => {
-        const previewContainer = imageContainer.children[index];
-        const downloadButton = previewContainer.querySelector('button');
-        downloadButton.click();
-      });
+        });
     });
-  </script>
+
+    // Handle resizing
+    resizeButton.addEventListener('click', () => {
+        const targetSizeKB = parseInt(document.getElementById('sizeInput').value, 10);
+        if (isNaN(targetSizeKB) || targetSizeKB <= 0) {
+            alert("Please enter a valid target size in KB.");
+            return;
+        }
+
+        processing.style.display = 'block';
+        images.forEach(imageData => {
+            const { file, imgElement, imagePreview } = imageData;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.src = imgElement.src;
+
+            img.onload = () => {
+                const width = img.width;
+                const height = img.height;
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob(blob => {
+                    const compressedSizeKB = (blob.size / 1024).toFixed(2);
+                    const newImage = document.createElement('img');
+                    const newFileUrl = URL.createObjectURL(blob);
+
+                    newImage.src = newFileUrl;
+                    imagePreview.innerHTML = ''; // Clear old image and info
+                    imagePreview.appendChild(newImage);
+                    imagePreview.innerHTML += ` ${file.name} - Resized Size: ${compressedSizeKB} KB`;
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = newFileUrl;
+                    downloadLink.download = file.name;
+                    downloadLink.textContent = 'Download';
+                    imagePreview.appendChild(downloadLink);
+                }, 'image/jpeg', 0.8); // Resize quality (80%)
+            };
+        });
+
+        processing.style.display = 'none';
+    });
+</script>
 
 </body>
 </html>
