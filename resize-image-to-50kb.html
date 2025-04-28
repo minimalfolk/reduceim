@@ -3,54 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Image Compressor (100KB)</title>
+    <title>Image Size Reducer</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 30px auto; padding: 20px; text-align: center; }
-        input, button { margin: 10px; padding: 10px; }
-        img { max-width: 100%; height: auto; margin-top: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            background-color: #f9f9f9;
+        }
+        .size-input {
+            margin: 20px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
-
-    <h2>Upload Image (Auto Compress to 100KB)</h2>
-    <input type="file" id="upload" accept="image/*"><br>
-
-    <div id="preview" style="display:none;">
-        <h3>Compressed Preview</h3>
-        <img id="previewImg" src="">
-        <br>
-        <a id="downloadLink" href="#" download="compressed.jpg">Download Compressed Image</a>
+    <h1>Reduce Image Size in KB Online</h1>
+    
+    <div class="upload-area" id="dropArea">
+        <p><strong>Select Images</strong></p>
+        <p>Select Or Drag & Drop Images Here</p>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;">
     </div>
-
-    <script src="https://unpkg.com/browser-image-compression/dist/browser-image-compression.js"></script>
+    
+    <div class="size-input">
+        <label>
+            <input type="checkbox" checked> Custom Size Adjustments
+        </label>
+        <p>Enter Size in KB:</p>
+        <input type="number" id="targetSize" value="60" min="10">
+    </div>
+    
+    <button id="reduceButton">Reduce Image</button>
+    
     <script>
-        const upload = document.getElementById('upload');
-        const preview = document.getElementById('preview');
-        const previewImg = document.getElementById('previewImg');
-        const downloadLink = document.getElementById('downloadLink');
-
-        upload.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const options = {
-                maxSizeMB: 0.1, // 100KB = 0.1MB
-                useWebWorker: true,
-            };
-
-            try {
-                const compressedFile = await imageCompression(file, options);
-                const compressedBlob = new Blob([compressedFile], { type: compressedFile.type });
-                const url = URL.createObjectURL(compressedBlob);
-
-                preview.style.display = 'block';
-                previewImg.src = url;
-                downloadLink.href = url;
-            } catch (error) {
-                console.error(error);
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const reduceButton = document.getElementById('reduceButton');
+        const targetSizeInput = document.getElementById('targetSize');
+        
+        dropArea.addEventListener('click', () => fileInput.click());
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropArea.style.backgroundColor = '#f0f0f0';
+        }
+        
+        function unhighlight() {
+            dropArea.style.backgroundColor = '';
+        }
+        
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+        
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+        
+        function handleFiles(files) {
+            if (files.length) {
+                console.log('Files selected:', files);
+                // Here you would process the files
             }
+        }
+        
+        reduceButton.addEventListener('click', function() {
+            const targetSizeKB = parseInt(targetSizeInput.value);
+            console.log('Reducing to:', targetSizeKB, 'KB');
+            // Here you would implement the image compression
         });
     </script>
-
 </body>
 </html>
