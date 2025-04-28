@@ -24,6 +24,13 @@
         .size-input {
             margin: 20px 0;
         }
+        .resize-options {
+            display: none;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
         button {
             background-color: #4CAF50;
             color: white;
@@ -36,6 +43,33 @@
         button:hover {
             background-color: #45a049;
         }
+        .preview-container {
+            margin: 20px 0;
+            display: none;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 10px 0;
+        }
+        .dimension-controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .dimension-input {
+            width: 45%;
+        }
+        input[type="number"], input[type="range"] {
+            padding: 8px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        .file-info {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -47,12 +81,44 @@
         <input type="file" id="fileInput" accept="image/*" style="display: none;">
     </div>
     
+    <div class="preview-container" id="previewContainer">
+        <img id="previewImage" class="preview-image" src="#" alt="Preview">
+        <div class="file-info" id="fileInfo"></div>
+    </div>
+    
     <div class="size-input">
         <label>
-            <input type="checkbox" checked> Custom Size Adjustments
+            <input type="checkbox" id="customSizeCheckbox" checked> Custom Size Adjustments
         </label>
         <p>Enter Size in KB:</p>
         <input type="number" id="targetSize" value="60" min="10">
+    </div>
+    
+    <div class="resize-options" id="resizeOptions">
+        <h3>Resize Options</h3>
+        
+        <div class="dimension-controls">
+            <div class="dimension-input">
+                <label for="width">Width (px):</label>
+                <input type="number" id="width" placeholder="Auto">
+            </div>
+            <div class="dimension-input">
+                <label for="height">Height (px):</label>
+                <input type="number" id="height" placeholder="Auto">
+            </div>
+        </div>
+        
+        <div>
+            <label for="resizePercent">Resize Percentage:</label>
+            <input type="range" id="resizePercent" min="10" max="100" value="100">
+            <span id="percentValue">100%</span>
+        </div>
+        
+        <div>
+            <label>
+                <input type="checkbox" id="maintainAspect" checked> Maintain Aspect Ratio
+            </label>
+        </div>
     </div>
     
     <button id="reduceButton">Reduce Image</button>
@@ -62,7 +128,48 @@
         const fileInput = document.getElementById('fileInput');
         const reduceButton = document.getElementById('reduceButton');
         const targetSizeInput = document.getElementById('targetSize');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const fileInfo = document.getElementById('fileInfo');
+        const customSizeCheckbox = document.getElementById('customSizeCheckbox');
+        const resizeOptions = document.getElementById('resizeOptions');
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        const resizePercent = document.getElementById('resizePercent');
+        const percentValue = document.getElementById('percentValue');
+        const maintainAspect = document.getElementById('maintainAspect');
         
+        let currentFile = null;
+        let originalWidth = 0;
+        let originalHeight = 0;
+        
+        // Toggle resize options when checkbox is clicked
+        customSizeCheckbox.addEventListener('change', function() {
+            resizeOptions.style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Initialize with resize options visible
+        resizeOptions.style.display = 'block';
+        
+        // Update percentage value when slider changes
+        resizePercent.addEventListener('input', function() {
+            percentValue.textContent = this.value + '%';
+        });
+        
+        // Handle aspect ratio maintenance
+        widthInput.addEventListener('input', function() {
+            if (maintainAspect.checked && originalWidth && originalHeight) {
+                heightInput.value = Math.round((originalHeight / originalWidth) * this.value);
+            }
+        });
+        
+        heightInput.addEventListener('input', function() {
+            if (maintainAspect.checked && originalWidth && originalHeight) {
+                widthInput.value = Math.round((originalWidth / originalHeight) * this.value);
+            }
+        });
+        
+        // File selection handlers
         dropArea.addEventListener('click', () => fileInput.click());
         
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -103,16 +210,55 @@
         });
         
         function handleFiles(files) {
-            if (files.length) {
-                console.log('Files selected:', files);
-                // Here you would process the files
+            if (files && files.length) {
+                currentFile = files[0];
+                
+                // Display preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    
+                    // Get original dimensions
+                    const img = new Image();
+                    img.onload = function() {
+                        originalWidth = img.width;
+                        originalHeight = img.height;
+                        updateFileInfo(currentFile, img.width, img.height);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(currentFile);
             }
         }
         
+        function updateFileInfo(file, width, height) {
+            const sizeInKB = (file.size / 1024).toFixed(2);
+            fileInfo.innerHTML = `
+                <strong>${file.name}</strong><br>
+                Original Size: ${sizeInKB} KB<br>
+                Dimensions: ${width} × ${height} px
+            `;
+        }
+        
         reduceButton.addEventListener('click', function() {
+            if (!currentFile) {
+                alert('Please select an image first');
+                return;
+            }
+            
             const targetSizeKB = parseInt(targetSizeInput.value);
+            const width = widthInput.value ? parseInt(widthInput.value) : null;
+            const height = heightInput.value ? parseInt(heightInput.value) : null;
+            const percent = parseInt(resizePercent.value) / 100;
+            
             console.log('Reducing to:', targetSizeKB, 'KB');
-            // Here you would implement the image compression
+            console.log('Resize options:', { width, height, percent });
+            
+            // Here you would implement the actual image compression and resizing
+            // This would involve using the Canvas API or a library like compressorjs
+            
+            alert('Image processing would happen here. In a real implementation, this would compress the image to ~' + targetSizeKB + 'KB and apply the resize options.');
         });
     </script>
 </body>
