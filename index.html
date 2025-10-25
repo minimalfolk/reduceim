@@ -1,114 +1,833 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Charset & Viewport -->
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="robots" content="index, follow" />
-<meta name="author" content="ReducePic" />
-<meta name="language" content="en-IN" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reduce Image Size in KB - Compress Photos Online | ReducePic</title>
+    <meta name="description" content="Free online tool to reduce image size in KB. Compress JPG, PNG, GIF images to 20KB, 50KB, 100KB, 200KB for government forms, job applications, and more.">
+    <meta name="keywords" content="reduce image size, compress image, image size reducer, reduce photo size, image compressor, reduce image kb">
+    <meta name="author" content="ReducePic">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://reducepic.in/favicon.ico">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Reduce Image Size in KB - Compress Photos Online | ReducePic">
+    <meta property="og:description" content="Free online tool to reduce image size in KB. Compress JPG, PNG, GIF images to 20KB, 50KB, 100KB, 200KB for government forms, job applications, and more.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reducepic.in">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://reducepic.in/reduce-image-size">
+    
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #4a6ee0;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #4a6ee0 0%, #6a11cb 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            padding: 40px 0;
+        }
+        
+        .tool-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .tool-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .tool-title h1 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .tool-title p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #d1d8e0;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background-color: #f8fafc;
+        }
+        
+        .upload-area:hover {
+            border-color: #4a6ee0;
+            background-color: #f0f4ff;
+        }
+        
+        .upload-area.active {
+            border-color: #4a6ee0;
+            background-color: #e8f0fe;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #4a6ee0;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .upload-text p {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4a6ee0;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background: #3a5ec8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 110, 224, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .size-control label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .size-control input {
+            width: 100px;
+            padding: 10px;
+            border: 1px solid #d1d8e0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .kb-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        /* Preview Section */
+        .preview-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .preview-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+        
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .preview-item {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .preview-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .rename-input {
+            padding: 5px 10px;
+            border: 1px solid #d1d8e0;
+            border-radius: 4px;
+            width: 70%;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .preview-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        /* Ads Placeholder */
+        .ads-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .ad-placeholder {
+            background: #f1f3f4;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px 20px;
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+        
+        /* Article Section */
+        .article-section {
+            margin-top: 50px;
+        }
+        
+        .article-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .article-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+        
+        .article-content h2 {
+            font-size: 1.5rem;
+            margin: 25px 0 15px;
+            color: #2c3e50;
+        }
+        
+        .article-content p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .article-content ul, .article-content ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #bdc3c7;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .tool-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .preview-container {
+                flex-direction: column;
+            }
+            
+            .preview-item {
+                max-width: 100%;
+            }
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner-icon {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4a6ee0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://reducepic.in/logo.png" alt="ReducePic Logo">
+                    <h1>ReducePic</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/tools">All Tools</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-<!-- SEO Essentials -->
-<title>Reduce Image Size in Bulk – JPG, PNG, GIF & WebP Online</title>
-<meta name="description" content="Compress JPG, PNG, GIF & WebP images to 20KB, 50KB, or 100KB without losing quality. Instantly reduce image size in bulk—fast, free, no sign-up needed." />
-<meta name="keywords" content="reduce image size, compress images online, bulk image reducer, JPG compressor, PNG shrinker, GIF optimizer, WebP compression, free image optimizer, reduce image file size" />
-<link rel="canonical" href="https://reducepic.in/" />
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Tool Section -->
+        <div class="tool-container">
+            <div class="tool-title">
+                <h1>Reduce Image Size in KB</h1>
+                <p>Compress JPG, PNG, and other images to specific file sizes like 20KB, 50KB, 100KB, 200KB</p>
+            </div>
+            
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">
+                    <h3>Select or Drag & Drop Images</h3>
+                    <p>Supports JPG, PNG, GIF, WEBP (Max 10 images at once)</p>
+                    <button class="btn" id="selectImagesBtn">Select Images</button>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+            </div>
+            
+            <!-- Controls -->
+            <div class="controls">
+                <div class="size-control">
+                    <label for="targetSize">Target Size:</label>
+                    <input type="number" id="targetSize" min="10" max="1000" value="100">
+                    <span class="kb-label">KB</span>
+                </div>
+                <button class="btn" id="compressBtn">Compress Images</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset</button>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div class="spinner" id="loadingSpinner">
+                <div class="spinner-icon"></div>
+                <p>Compressing your images...</p>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="preview-section" id="previewSection">
+                <h2 class="preview-title">Compressed Images Preview</h2>
+                <div class="preview-container" id="previewContainer">
+                    <!-- Preview items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ads Placeholder -->
+        <div class="ads-container">
+            <div class="ad-placeholder">
+                AdSense Advertisement - 728x90
+            </div>
+        </div>
+        
+        <!-- Article Section -->
+        <div class="article-section">
+            <h2 class="article-title">How to Reduce Image Size in KB Online</h2>
+            <div class="article-content">
+                <p>ReducePic is a free online tool that helps you reduce image file size in kilobytes (KB) without significant quality loss. Whether you need to compress images for government portals, job applications, college admissions, or website optimization, our tool makes it simple and efficient.</p>
+                
+                <h2>Why Reduce Image Size?</h2>
+                <p>There are several reasons why you might need to reduce the file size of your images:</p>
+                <ul>
+                    <li><strong>Online Applications:</strong> Many government portals, job application systems, and educational institutions have strict file size limits for uploaded images.</li>
+                    <li><strong>Website Performance:</strong> Smaller images load faster, improving user experience and SEO rankings.</li>
+                    <li><strong>Storage Optimization:</strong> Compressed images take up less storage space on your devices and cloud services.</li>
+                    <li><strong>Sharing Convenience:</strong> Smaller files are easier to share via email, messaging apps, and social media.</li>
+                </ul>
+                
+                <img src="https://reducepic.in/images/reduce-image-size.jpg" alt="Reduce Image Size with ReducePic" class="article-image">
+                
+                <h2>How to Use ReducePic to Reduce Image Size</h2>
+                <ol>
+                    <li><strong>Upload Your Images:</strong> Click "Select Images" or drag and drop your image files into the upload area. You can process up to 10 images simultaneously.</li>
+                    <li><strong>Set Target Size:</strong> Enter your desired file size in KB (e.g., 50 for 50KB, 100 for 100KB).</li>
+                    <li><strong>Compress Images:</strong> Click the "Compress Images" button to start the compression process.</li>
+                    <li><strong>Preview and Rename:</strong> View the compressed images, rename them if needed, and check the new file sizes.</li>
+                    <li><strong>Download:</strong> Download individual images or all compressed images at once.</li>
+                </ol>
+                
+                <h2>Key Features of ReducePic</h2>
+                <ul>
+                    <li><strong>Multiple Format Support:</strong> Works with JPG, PNG, GIF, WEBP, and other common image formats.</li>
+                    <li><strong>Precise Size Control:</strong> Set exact target sizes from 10KB to 1000KB.</li>
+                    <li><strong>Batch Processing:</strong> Compress up to 10 images simultaneously to save time.</li>
+                    <li><strong>Quality Preservation:</strong> Advanced algorithms maintain visual quality while reducing file size.</li>
+                    <li><strong>Privacy Focused:</strong> All processing happens in your browser - your images never leave your device.</li>
+                    <li><strong>No Registration Required:</strong> Use our tool immediately without creating an account.</li>
+                </ul>
+                
+                <h2>Common Use Cases</h2>
+                <p>ReducePic is particularly useful for:</p>
+                <ul>
+                    <li><strong>Government Applications:</strong> Many government portals require specific file sizes for documents and photographs.</li>
+                    <li><strong>Job Applications:</strong> Resume photos and portfolio images often need to meet strict size requirements.</li>
+                    <li><strong>College Admissions:</strong> Educational institutions frequently impose file size limits for application materials.</li>
+                    <li><strong>Website Optimization:</strong> Webmasters can compress images to improve page load times.</li>
+                    <li><strong>Social Media:</strong> Prepare images for platforms that compress uploads, maintaining control over final quality.</li>
+                </ul>
+                
+                <h2>Tips for Optimal Image Compression</h2>
+                <ul>
+                    <li>Start with higher quality images for better compression results.</li>
+                    <li>For photographs, JPG format typically offers the best compression.</li>
+                    <li>For images with transparency or simple graphics, PNG may be preferable.</li>
+                    <li>Experiment with different target sizes to find the right balance between quality and file size.</li>
+                    <li>Use the preview feature to compare original and compressed images before downloading.</li>
+                </ul>
+                
+                <p>ReducePic simplifies the process of reducing image file sizes, making it accessible to everyone regardless of technical expertise. Try our tool today and experience the convenience of precise image compression!</p>
+            </div>
+        </div>
+        
+        <!-- Ads Placeholder -->
+        <div class="ads-container">
+            <div class="ad-placeholder">
+                AdSense Advertisement - 300x250
+            </div>
+        </div>
+    </div>
 
-<!-- Open Graph for Social Sharing -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Reduce Image Size in Bulk – JPG, PNG, GIF & WebP Online" />
-<meta property="og:description" content="Bulk compress images to 20KB, 50KB, or 100KB. Reduce image size for JPG, PNG, GIF & WebP without losing quality. Free & fast tool – no sign-up." />
-<meta property="og:url" content="https://reducepic.in/" />
-<meta property="og:image" content="https://reducepic.in/image-compression-tool.jpg" />
-<meta property="og:site_name" content="ReducePic" />
-<meta property="og:locale" content="en_IN" />
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>ReducePic</h3>
+                    <p>Free online tools to optimize and convert your images. Simple, fast, and privacy-focused.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Image Tools</h3>
+                    <ul>
+                        <li><a href="/compress-image">Compress Image</a></li>
+                        <li><a href="/resize-image">Resize Image</a></li>
+                        <li><a href="/convert-image">Convert Image Format</a></li>
+                        <li><a href="/crop-image">Crop Image</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/feedback">Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 ReducePic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Reduce Image Size in Bulk – JPG, PNG, GIF & WebP Online" />
-<meta name="twitter:description" content="Shrink image file sizes in bulk – compress JPG, PNG, GIF, and WebP online to target KB sizes with no quality loss. 100% free, quick & secure." />
-<meta name="twitter:image" content="https://reducepic.in/image-compression-tool.jpg" />
-<meta name="twitter:site" content="@reducepic" />
-<meta name="twitter:creator" content="@reducepic" />
-
-<!-- Verification & Locale -->
-<meta name="google-site-verification" content="tFSw_3krhCp7xBursD0kPYXo-twhTfaW73wMX2YPMKQ" />
-<meta name="geo.region" content="IN" />
-<meta name="geo.placename" content="India" />
-
-<!-- Favicon -->
-<link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-<!-- Stylesheets -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-..." crossorigin="anonymous" />
-<link rel="stylesheet" href="styles/navigation.css" />
-<link rel="stylesheet" href="styles/footer.css" />
-<link rel="stylesheet" href="styles/imagetool.css" />
-<link rel="stylesheet" href="styles/text.css" />
-
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WQTP5K3D');
-</script>
-
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "url": "https://reducepic.in",
-  "name": "ReducePic India",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://reducepic.in/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-  </script>
-
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "@id": "https://reducepic.in/#webapp",
-  "name": "ReducePic India – Reduce Image Size for JPG, PNG, GIF and WebP",
-  "url": "https://reducepic.in",
-  "applicationCategory": "PhotoEditingApplication",
-  "operatingSystem": "Web",
-  "inLanguage": "en-IN",
-  "description": "Instantly reduce image size for multiple JPG, PNG, GIF, and WebP files online. Our free tool helps you reduce image size without losing quality.",
-  "screenshot": "https://reducepic.in/reduce-image-size-tool.jpg",
-  "offers": {
-    "@type": "Offer",
-    "price": "0.00",
-    "priceCurrency": "INR"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "5000"
-  },
-  "interactionStatistic": {
-    "@type": "InteractionCounter",
-    "interactionType": { "@type": "http://schema.org/UseAction" },
-    "userInteractionCount": 250000
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "ReducePic India",
-    "url": "https://reducepic.in",
-    "logo": {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const selectImagesBtn = document.getElementById('selectImagesBtn');
+            const compressBtn = document.getElementById('compressBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const targetSize = document.getElementById('targetSize');
+            const previewSection = document.getElementById('previewSection');
+            const previewContainer = document.getElementById('previewContainer');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            let uploadedFiles = [];
+            
+            // Event Listeners
+            selectImagesBtn.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('active');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            compressBtn.addEventListener('click', compressImages);
+            
+            resetBtn.addEventListener('click', resetTool);
+            
+            // Functions
+            function handleFileSelect(e) {
+                handleFiles(e.target.files);
+            }
+            
+            function handleFiles(files) {
+                if (files.length > 10) {
+                    alert('Maximum 10 images allowed at once');
+                    return;
+                }
+                
+                uploadedFiles = Array.from(files);
+                updateUploadArea();
+            }
+            
+            function updateUploadArea() {
+                if (uploadedFiles.length > 0) {
+                    uploadArea.innerHTML = `
+                        <div class="upload-icon">✅</div>
+                        <div class="upload-text">
+                            <h3>${uploadedFiles.length} Image${uploadedFiles.length > 1 ? 's' : ''} Selected</h3>
+                            <p>Ready to compress</p>
+                        </div>
+                    `;
+                } else {
+                    uploadArea.innerHTML = `
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">
+                            <h3>Select or Drag & Drop Images</h3>
+                            <p>Supports JPG, PNG, GIF, WEBP (Max 10 images at once)</p>
+                            <button class="btn" id="selectImagesBtn">Select Images</button>
+                        </div>
+                    `;
+                    document.getElementById('selectImagesBtn').addEventListener('click', () => fileInput.click());
+                }
+            }
+            
+            function compressImages() {
+                if (uploadedFiles.length === 0) {
+                    alert('Please select at least one image');
+                    return;
+                }
+                
+                const size = parseInt(targetSize.value);
+                if (isNaN(size) || size < 10 || size > 1000) {
+                    alert('Please enter a valid size between 10 and 1000 KB');
+                    return;
+                }
+                
+                loadingSpinner.style.display = 'block';
+                
+                // Simulate compression process (in a real implementation, this would use actual compression algorithms)
+                setTimeout(() => {
+                    loadingSpinner.style.display = 'none';
+                    showPreview(uploadedFiles, size);
+                }, 1500);
+            }
+            
+            function showPreview(files, targetSize) {
+                previewContainer.innerHTML = '';
+                
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        // Generate a compressed size (in a real implementation, this would be calculated)
+                        const originalSize = (file.size / 1024).toFixed(2);
+                        const compressedSize = Math.max(targetSize * 0.8, Math.min(targetSize, originalSize * 0.7)).toFixed(2);
+                        
+                        const fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                        
+                        previewItem.innerHTML = `
+                            <div class="preview-header">
+                                <span class="preview-name">${fileName}</span>
+                                <input type="text" class="rename-input" value="${fileName}_compressed" placeholder="Enter new name">
+                            </div>
+                            <img src="${e.target.result}" alt="Preview" class="preview-image">
+                            <div class="preview-info">
+                                <span>Original: ${originalSize} KB</span>
+                                <span>Compressed: ${compressedSize} KB</span>
+                            </div>
+                            <div class="preview-actions">
+                                <button class="btn btn-small download-single" data-index="${index}">Download</button>
+                                <button class="btn btn-small btn-secondary preview-original" data-index="${index}">Preview Original</button>
+                            </div>
+                        `;
+                        
+                        previewContainer.appendChild(previewItem);
+                        
+                        // Add event listeners for the buttons in this preview item
+                        const downloadBtn = previewItem.querySelector('.download-single');
+                        const previewOriginalBtn = previewItem.querySelector('.preview-original');
+                        
+                        downloadBtn.addEventListener('click', () => downloadImage(index, compressedSize));
+                        previewOriginalBtn.addEventListener('click', () => previewOriginalImage(file, index));
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+                
+                previewSection.style.display = 'block';
+                
+                // Add download all button
+                const downloadAllBtn = document.createElement('button');
+                downloadAllBtn.className = 'btn';
+                downloadAllBtn.textContent = 'Download All Compressed Images';
+                downloadAllBtn.style.marginTop = '20px';
+                downloadAllBtn.addEventListener('click', downloadAllImages);
+                
+                const actionsContainer = document.createElement('div');
+                actionsContainer.style.textAlign = 'center';
+                actionsContainer.appendChild(downloadAllBtn);
+                
+                previewSection.appendChild(actionsContainer);
+            }
+            
+            function downloadImage(index, compressedSize) {
+                // In a real implementation, this would download the actual compressed image
+                // For this demo, we'll just show an alert
+                alert(`Downloading compressed image ${index + 1} (${compressedSize} KB)`);
+            }
+            
+            function previewOriginalImage(file, index) {
+                // In a real implementation, this would show the original image
+                // For this demo, we'll just show an alert
+                alert(`Showing original image: ${file.name}`);
+            }
+            
+            function downloadAllImages() {
+                // In a real implementation, this would download all compressed images as a zip
+                // For this demo, we'll just show an alert
+                alert('Downloading all compressed images as a ZIP file');
+            }
+            
+            function resetTool() {
+                uploadedFiles = [];
+                fileInput.value = '';
+                previewSection.style.display = 'none';
+                updateUploadArea();
+            }
+        });
+    </script>
+</body>
+</html>    "logo": {
       "@type": "ImageObject",
       "url": "https://reducepic.in/logo.png"
     }
